@@ -1,0 +1,8 @@
+exemplo de application properties
+
+//exemplo de configuracoes
+notificador.email.host-servidor=smtp.ryan.com.br
+notificador.email.porta-servidor=25
+
+continuacao na classe code 
+
