@@ -14,4 +14,9 @@ public class Cozinha {
     private Long id;
 
     private String nome;
+
+    //RELACIONAMENTO BI-DIRECIONAL
+    //@JsonIgnore //evita erros circularers
+    //@OneToMany(mappedBy = "cozinha") //passa o mapeamento que foi declarado no outro lado da relacao
+    //private List<Restaurante> restaurantes = new ArrayList<>();
 }

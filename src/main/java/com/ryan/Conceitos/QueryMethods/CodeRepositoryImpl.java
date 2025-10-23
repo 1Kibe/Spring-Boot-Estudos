@@ -36,5 +36,5 @@ public class CodeRepositoryImpl implements CodeRepositoryQuery {
     //fazer a classe ClasseRepositoryImpl implementar a ClasseRepositoryQuery
 
     //assim quando o metodo for chamado na ClasseRepository ele vai ser implementado na ClasseRepositoryImpl
-    
+    //explicacao em package CriteriaAPI
 }

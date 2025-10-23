@@ -47,6 +47,30 @@ public class RestauranteResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Restaurante> atualizar(@PathVariable Long id, @RequestBody Restaurante obj) {
+        /*
+           try {
+            Optional<Restaurante> optAtual = service.buscar(id);
+            if (optAtual.isPresent()) {
+                Restaurante restauranteAtual = optAtual.get();
+
+                // copia propriedades do request para a entidade atual, excluindo campos que não devem ser sobrescritos
+                BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco","dataCriacao");
+
+                Restaurante atualizado = service.salvar(restauranteAtual);
+                return ResponseEntity.ok(atualizado);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (EntidadeNaoEncontradaException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+            
+            //*   Preserva um objeto existente: busca restauranteAtual (repository.findById(...)), copia 
+            //propriedades do request para o objeto existente e exclui campos críticos ("id", "formasPagamento", "endereco").
+            
+            //*   BeanUtils.copyProperties do Spring copia nulls — se um campo for null no request ele sobrescreve o 
+            //existente. Para copiar apenas não-nulos use utilitário custom ou MapStruct (ou implemente merge manual).
+            
+         */
         return service.buscar(id)
                 .map(existente -> {
                     obj.setId(id);
