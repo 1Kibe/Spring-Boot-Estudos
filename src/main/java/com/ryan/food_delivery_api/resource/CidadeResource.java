@@ -1,9 +1,10 @@
 package com.ryan.food_delivery_api.resource;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Cidade;
@@ -35,9 +37,8 @@ public class CidadeResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cidade> findById(@PathVariable Long id){
-        Optional<Cidade> cozinha = service.buscar(id);
-        return  cozinha.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public Cidade findById(@PathVariable Long id){
+        return service.buscarOuFalhar(id);
     }
 
     @PostMapping
@@ -47,23 +48,20 @@ public class CidadeResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cidade> atualizar(@PathVariable Long id, @RequestBody Cidade obj) {
-        return service.buscar(id)
-                .map(existente -> {
-                    obj.setId(id);
-                    Cidade atualizado = service.salvar(obj);
-                    return ResponseEntity.ok(atualizado);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public Cidade atualizar(@PathVariable Long id, @RequestBody Cidade entity) {
+            Cidade entidadeAtual = service.buscarOuFalhar(id);
+
+            BeanUtils.copyProperties(entity, entidadeAtual,
+            "id");
+
+            return service.salvar(entidadeAtual);
+            
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (service.buscar(id).isPresent()) {
-            service.deletar(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletar(@PathVariable Long id) {
+        service.deletar(id);
     }
 
 }

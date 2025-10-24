@@ -12,7 +12,6 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,12 +61,9 @@ public class CozinhaResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (service.buscar(id).isPresent()) {
-            service.deletar(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletar(@PathVariable Long id) {
+        service.deletar(id);
     }
 
     

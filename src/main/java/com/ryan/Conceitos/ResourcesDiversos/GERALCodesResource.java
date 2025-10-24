@@ -1,6 +1,6 @@
 package com.ryan.Conceitos.ResourcesDiversos;
 
-public class CodeResource {
+public class GERALCodesResource {
 /* 
 
     //------------------------------------------------------------- GET ALL

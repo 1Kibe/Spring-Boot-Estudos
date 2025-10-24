@@ -1,17 +1,7 @@
-package com.ryan.food_delivery_api.service;
+package com.ryan.Conceitos.ResourcesDiversos.ComRepondeStatusSimplificado;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.ryan.food_delivery_api.domain.Restaurante;
-import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
-import com.ryan.food_delivery_api.repository.RestauranteRepository;
-
-@Service
-public class RestauranteService {
+public class CodeService {
+/* 
 
     private static final String MSG_ENTIDADE_NAO_ENCONTRADA = "Entidade não encontrada";
 
@@ -50,4 +40,6 @@ public class RestauranteService {
                     String.format(MSG_ENTIDADE_NAO_ENCONTRADA, id));
         }
     }
+
+*/
 }

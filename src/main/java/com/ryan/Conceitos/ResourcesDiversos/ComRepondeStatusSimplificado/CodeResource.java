@@ -1,27 +1,7 @@
-package com.ryan.food_delivery_api.resource;
+package com.ryan.Conceitos.ResourcesDiversos.ComRepondeStatusSimplificado;
 
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ryan.food_delivery_api.domain.Restaurante;
-import com.ryan.food_delivery_api.service.RestauranteService;
-
-
-@RestController
-@RequestMapping("/restaurantes")
-public class RestauranteResource {
+public class CodeResource {
+/* 
 
     @Autowired
     private RestauranteService service;
@@ -62,5 +42,6 @@ public class RestauranteResource {
     public void deletar(@PathVariable Long id) {
         service.deletar(id);
     }
-
+*/
 }
+
