@@ -1,7 +1,7 @@
 package com.ryan.Conceitos.ResourcesDiversos;
 
 
-public class CodeService {
+public class GERALCodesService {
 /* 
 
     @Autowired
