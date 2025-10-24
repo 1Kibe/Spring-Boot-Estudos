@@ -8,8 +8,6 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -36,12 +34,11 @@ public class Restaurante {
     @ManyToOne
     private Cozinha cozinha;
 
-    @JsonIgnore     //muito payload
     @Embedded       //chama o Embeddable
     private Endereco endereco;
 
-    @OneToMany 
-    private List<Produto> produtos;
+    @OneToMany(mappedBy = "restaurante") 
+    private List<Produto> produtos = new ArrayList<>();
 
     @CreationTimestamp
     @Column(nullable = false)
@@ -53,7 +50,6 @@ public class Restaurante {
 
     //ATENCAO cuidado com a rota Put ao implementa @ManyToMany
     //ao fazer Put sem o tratamento adequado ele nao carrega os dados antigos se ja ouver algo, e acaba deletando os mesmos
-    @JsonIgnore     //muito paylod 
     @ManyToMany
     @JoinTable( //customiza a table de juncao
         name = "restaurante_forma_pagamento",

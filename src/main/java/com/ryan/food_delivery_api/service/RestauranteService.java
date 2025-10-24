@@ -20,7 +20,7 @@ public class RestauranteService {
     }
 
     public List<Restaurante> listar(){
-        return repository.findAll();
+        return repository.findAllCat();
     }
 
     public Optional<Restaurante> buscar(Long id){

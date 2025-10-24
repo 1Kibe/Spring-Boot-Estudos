@@ -27,5 +27,5 @@ public class Endereco {
 
     @ManyToOne
     @JoinColumn(name = "endereco_cidade_id")
-    private String cidade;
+    private Cidade cidade;
 }
