@@ -31,22 +31,17 @@ public class Restaurante {
     private String nome;
     private BigDecimal taxaFrete;
 
-    @ManyToOne
-    private Cozinha cozinha;
-
     @Embedded       //chama o Embeddable
     private Endereco endereco;
 
     @OneToMany(mappedBy = "restaurante") 
     private List<Produto> produtos = new ArrayList<>();
 
-    @CreationTimestamp
-    @Column(nullable = false)
-    private OffsetDateTime dataCriacao;
+    @OneToMany(mappedBy = "restaurante")
+    private List<Pedido> pedidos = new ArrayList<>();
 
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private OffsetDateTime dataAtualizacao;
+    @ManyToOne
+    private Cozinha cozinha;
 
     //ATENCAO cuidado com a rota Put ao implementa @ManyToMany
     //ao fazer Put sem o tratamento adequado ele nao carrega os dados antigos se ja ouver algo, e acaba deletando os mesmos
@@ -57,5 +52,15 @@ public class Restaurante {
         inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id")       //define o nome da outra tabela 
     )
     private List<FormaPagamento> formaPagamento = new ArrayList<>();
+
+    @CreationTimestamp
+    @Column(nullable = false)
+    private OffsetDateTime dataCriacao;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private OffsetDateTime dataAtualizacao;
+
+    
 
 }

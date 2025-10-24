@@ -23,4 +23,7 @@ public class Produto {
 
     @ManyToOne
     private Restaurante restaurante;
+
+    @ManyToOne
+    private ItemPedido itemPedido;
 }
