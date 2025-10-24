@@ -1,17 +1,8 @@
-package com.ryan.food_delivery_api.service;
+package com.ryan.Conceitos.ResourcesDiversos;
 
-import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.ryan.food_delivery_api.domain.Cozinha;
-import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
-import com.ryan.food_delivery_api.repository.CozinhaRepository;
-
-@Service
-public class CozinhaService {
+public class CodeService {
+/* 
 
     @Autowired
     private CozinhaRepository repository;
@@ -42,5 +33,5 @@ public class CozinhaService {
     public void deletar(Long id){
         repository.deleteById(id);
     }
-
+*/
 }
