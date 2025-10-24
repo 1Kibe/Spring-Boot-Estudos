@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Cozinha;
+import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.repository.CozinhaRepository;
 
 @Service
@@ -26,6 +27,12 @@ public class CozinhaService {
 
     public Optional<Cozinha> buscar(Long id){
         return repository.findById(id);
+    }
+    public Cozinha buscarOuFalhar(Long id){
+        //ResponseStatus
+        return repository.findById(id)
+                    .orElseThrow(()
+                    -> new EntidadeNaoEncontradaException("Entidade Nao Encontrada"));
     }
 
     public Cozinha salvar(Cozinha cozinha){

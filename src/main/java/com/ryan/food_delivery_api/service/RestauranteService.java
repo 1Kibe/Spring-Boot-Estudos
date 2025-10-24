@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Restaurante;
@@ -26,7 +25,16 @@ public class RestauranteService {
     }
 
     public Optional<Restaurante> buscar(Long id){
+    
         return repository.findById(id);
+        
+    }
+
+    public Restaurante buscarOuFalhar(Long id){
+        //ResponseStatus
+        return repository.findById(id)
+                    .orElseThrow(()
+                    -> new EntidadeNaoEncontradaException("Entidade Nao Encontrada"));
     }
 
     public Restaurante salvar(Restaurante obj){
@@ -34,9 +42,9 @@ public class RestauranteService {
     }
 
     public void deletar(Long id){
-        //Usando ResponseStatusException
+        //Usando ResponseStatus
         if (!repository.existsById(id)) {
-            throw new EntidadeNaoEncontradaException(HttpStatus.BAD_REQUEST,"Restaurante de ID " + id + " não encontrado.");
+            throw new EntidadeNaoEncontradaException("Restaurante de ID " + id + " não encontrado.");
         }
         repository.deleteById(id);
     }
