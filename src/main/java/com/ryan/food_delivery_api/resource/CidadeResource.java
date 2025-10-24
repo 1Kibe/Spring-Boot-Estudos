@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Cidade;
+import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
+import com.ryan.food_delivery_api.exception.NegocioException;
 import com.ryan.food_delivery_api.service.CidadeService;
 
 @RestController
@@ -42,9 +43,13 @@ public class CidadeResource {
     }
 
     @PostMapping
-    public ResponseEntity<Cidade> salvar(@RequestBody Cidade obj) {
-        Cidade novo = service.salvar(obj);
-        return ResponseEntity.ok(novo);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cidade salvar(@RequestBody Cidade obj) {
+        try{
+            return service.salvar(obj);
+        } catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -54,8 +59,11 @@ public class CidadeResource {
             BeanUtils.copyProperties(entity, entidadeAtual,
             "id");
 
-            return service.salvar(entidadeAtual);
-            
+            try{
+                return service.salvar(entidadeAtual);
+            }catch(EntidadeNaoEncontradaException e){
+                throw new NegocioException(e.getMessage());
+            }
     }
 
     @DeleteMapping("/{id}")
@@ -63,5 +71,47 @@ public class CidadeResource {
     public void deletar(@PathVariable Long id) {
         service.deletar(id);
     }
+
+    /*
+     Buscar cidade inexistente (GET /cidades/{id})
+     🚫 Lança EntidadeNaoEncontradaException
+     Resposta 404 NOT FOUND
+
+     Essa mensagem vem do seu método buscarOuFalhar()
+     throw new EntidadeNaoEncontradaException(String.format("Cidade de código %d não encontrada", id));
+
+
+
+
+     Cadastrar cidade com estado inválido (POST /cidades)
+     🚫 O estadoService.buscarOuFalhar(9999) lança EntidadeNaoEncontradaException,
+     que o controller captura e relança como NegocioException.
+     Resposta 400 BAD REQUEST
+
+
+
+
+
+     Atualizar cidade inexistente (PUT /cidades/{id})
+     🚫 O service.buscarOuFalhar(123) lança EntidadeNaoEncontradaException
+     Resposta 404 NOT FOUND
+
+
+
+
+
+     Excluir cidade inexistente (DELETE /cidades/{id})
+     🚫 repository.deleteById(123) lança EmptyResultDataAccessException 
+     ➡️ Convertida em EntidadeNaoEncontradaException.
+     Resposta 404 NOT FOUND
+
+
+
+
+
+     Excluir cidade em uso (DELETE /cidades/{id})
+     🚫 DataIntegrityViolationException → EntidadeEmUsoException.
+     Resposta 409 CONFLICT
+    */
 
 }

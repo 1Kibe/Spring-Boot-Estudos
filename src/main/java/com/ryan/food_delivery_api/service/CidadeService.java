@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.domain.Estado;
+import com.ryan.food_delivery_api.exception.EntidadeEmUsoException;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.repository.CidadeRepository;
 
@@ -15,6 +18,8 @@ import com.ryan.food_delivery_api.repository.CidadeRepository;
 public class CidadeService {
 
     private static final String MSG_ENTIDADE_NAO_ENCONTRADA = "Entidade não encontrada";
+
+    private static final String MSG_ENTIDADE_EM_USO = "Entidade atual nao pode ser removida, pois esta em uso";
 
     @Autowired
     private CidadeRepository repository;
@@ -53,9 +58,11 @@ public class CidadeService {
     public void deletar(Long id) {
         try {
             repository.deleteById(id);
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
                     String.format(MSG_ENTIDADE_NAO_ENCONTRADA, id));
+        } catch (DataIntegrityViolationException e){
+            throw new EntidadeEmUsoException(MSG_ENTIDADE_EM_USO);
         }
     }
 }
