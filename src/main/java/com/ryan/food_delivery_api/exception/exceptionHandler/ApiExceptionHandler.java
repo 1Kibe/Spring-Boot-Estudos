@@ -1,7 +1,10 @@
 package com.ryan.food_delivery_api.exception.exceptionHandler;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.ryan.food_delivery_api.exception.EntidadeEmUsoException;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.NegocioException;
@@ -72,12 +78,24 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // --------------------------------------------------------------------------------------------------
-    // Para erros de sintaxe no json
+    // Handler
+    // Forma Padrao
+    // --------------------------------------------------------------------------------------------------
 
+    // Para erros gerais de sintaxe no json
     @Override
     @Nullable
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        // pega a exception raiz do erro
+        Throwable rootCause = ExceptionUtils.getRootCause(ex);
+
+        // se a causa for um formato invalido. Exemplo "id":"1,"
+        if (rootCause instanceof InvalidFormatException) {
+            return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        } else if (rootCause instanceof PropertyBindingException) {
+            return hendlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
+        }
 
         HttpStatus _status = HttpStatus.BAD_REQUEST;
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -85,8 +103,54 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
 
-        return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), status, request);
+        return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), _status, request);
     }
+
+    // --------------------------------------------------------------------------------------------------
+    private String joinPath(List<Reference> references) {
+        // Constrói o caminho completo do campo do JSON que está inválido (ex:
+        // "cidade.id").
+        return references.stream()
+                .map(ref -> ref.getFieldName())
+                .collect(Collectors.joining("."));
+    }
+    // --------------------------------------------------------------------------------------------------
+
+    // trata propriedades ignoradas(anotadas com @JsonIgnore) ou à mais nas requisicoes 
+    private ResponseEntity<Object> hendlePropertyBindingException(PropertyBindingException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        String path = joinPath(ex.getPath());
+
+        HttpStatus _status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+        String _detail = String.format("A propriedade '%s' não existe.", path);
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+
+        return handleExceptionInternal(ex, layoutBodyy, headers, _status, request);
+    }
+
+    // --------------------------------------------------------------------------------------------------
+
+    // Trata formatos invalido. Exemplo "id":"aa"
+    private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        String path = joinPath(ex.getPath());
+
+        HttpStatus _status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+        String _detail = String.format("A propriedade '%s' recebeu o valor '%s', "
+                + "que é de um tipo inválido. Tipo esperado: %s", path, ex.getValue(),
+                ex.getTargetType().getSimpleName());
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+
+        return handleExceptionInternal(ex, layoutBodyy, headers, status, request);
+    }
+
+    // --------------------------------------------------------------------------------------------------
 
     // Customiza a resposta pradrao do ResponseEntityExceptionHandler
     @Override
