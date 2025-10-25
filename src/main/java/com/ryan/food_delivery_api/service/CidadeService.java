@@ -48,9 +48,9 @@ public class CidadeService {
     public Cidade salvar(Cidade obj) {
         // verifica se existe um atributo presente
         Long atributoId = obj.getEstado().getId();
-        Estado estado = estadoService.buscarOuFalhar(atributoId);
+        Estado atributo = estadoService.buscarOuFalhar(atributoId);
 
-        obj.setEstado(estado);
+        obj.setEstado(atributo);
 
         return repository.save(obj);
     }

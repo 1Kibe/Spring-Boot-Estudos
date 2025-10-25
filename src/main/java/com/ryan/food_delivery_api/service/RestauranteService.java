@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ryan.food_delivery_api.domain.Cozinha;
 import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.repository.RestauranteRepository;
@@ -17,6 +18,9 @@ public class RestauranteService {
 
     @Autowired
     private RestauranteRepository repository;
+
+    @Autowired
+    private CozinhaService cozinhaService;
 
     public RestauranteService(RestauranteRepository repository) {
         this.repository = repository;
@@ -39,6 +43,11 @@ public class RestauranteService {
     }
 
     public Restaurante salvar(Restaurante obj) {
+        Long atributoId = obj.getCozinha().getId();
+        Cozinha atributo = cozinhaService.buscarOuFalhar(atributoId);
+
+        obj.setCozinha(atributo);
+
         return repository.save(obj);
     }
 

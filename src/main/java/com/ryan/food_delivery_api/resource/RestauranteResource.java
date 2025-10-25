@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Restaurante;
+import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
+import com.ryan.food_delivery_api.exception.NegocioException;
 import com.ryan.food_delivery_api.service.RestauranteService;
 
 
@@ -25,6 +27,7 @@ public class RestauranteResource {
 
     @Autowired
     private RestauranteService service;
+
 
     public RestauranteResource(RestauranteService service) {
         this.service = service;
@@ -43,7 +46,11 @@ public class RestauranteResource {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante salvar(@RequestBody Restaurante obj) {
-        return service.salvar(obj);
+        try{
+            return service.salvar(obj);
+        }catch(EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
