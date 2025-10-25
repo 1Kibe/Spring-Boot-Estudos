@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,12 +29,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
         String _detail = e.getMessage();
 
-        //cria um body com build
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType,_detail).build();
+        // cria um body com build
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
-
 
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<?> tratarNegocioException(NegocioException e, WebRequest request) {
@@ -42,11 +42,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ERRO_NEGOCIO;
         String _detail = e.getMessage();
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType,_detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
-
 
     @ExceptionHandler(EntidadeEmUsoException.class)
     public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
@@ -55,9 +54,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ERRO_NEGOCIO;
         String _detail = e.getMessage();
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType,_detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
 
-        return handleExceptionInternal(e,layoutBodyy, new HttpHeaders(), _status, request);
+        return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
 
     // --------------------------------------------------------------------------------------------------
@@ -73,6 +72,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // --------------------------------------------------------------------------------------------------
+    // Para erros de sintaxe no json
+
+    @Override
+    @Nullable
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        HttpStatus _status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+        String _detail = "O corpo da requisição esta invalido. Verifique erro de sintaxe";
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+
+        return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), status, request);
+    }
 
     // Customiza a resposta pradrao do ResponseEntityExceptionHandler
     @Override
