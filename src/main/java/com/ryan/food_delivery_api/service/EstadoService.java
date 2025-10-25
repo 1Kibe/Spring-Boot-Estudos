@@ -49,7 +49,7 @@ public class EstadoService {
             throw new EstadoNaoEncontradoException(id);
                     
         } catch (DataIntegrityViolationException e){
-            throw new EntidadeNaoEncontradaException(MSG_ENTIDADE_EM_USO);
+            throw new EstadoNaoEncontradoException(MSG_ENTIDADE_EM_USO);
         }
     }
 }

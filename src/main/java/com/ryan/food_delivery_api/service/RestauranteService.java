@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 import com.ryan.food_delivery_api.domain.Cozinha;
 import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
+import com.ryan.food_delivery_api.exception.restaurante.RestauranteNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.RestauranteRepository;
 
 @Service
 public class RestauranteService {
-
-    private static final String MSG_ENTIDADE_NAO_ENCONTRADA = "Entidade não encontrada";
 
     @Autowired
     private RestauranteRepository repository;
@@ -39,7 +38,7 @@ public class RestauranteService {
     public Restaurante buscarOuFalhar(Long id) {
         // ResponseStatus
         return repository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(MSG_ENTIDADE_NAO_ENCONTRADA));
+                .orElseThrow(() -> new RestauranteNaoEncontradoException(id));
     }
 
     public Restaurante salvar(Restaurante obj) {
@@ -55,8 +54,7 @@ public class RestauranteService {
         try {
             repository.deleteById(id);
         } catch (EntidadeNaoEncontradaException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_ENTIDADE_NAO_ENCONTRADA, id));
+            throw new RestauranteNaoEncontradoException(id);
         }
     }
 }
