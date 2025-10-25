@@ -9,4 +9,9 @@ public class NegocioException extends RuntimeException{
     public NegocioException(String mensagem){
         super(mensagem);
     }
+
+    //retorna a causa da exception
+    public NegocioException(String mensagem, Throwable causa){
+        super(mensagem,causa);
+    }
 }

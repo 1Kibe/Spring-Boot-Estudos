@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.domain.Estado;
-import com.ryan.food_delivery_api.exception.EntidadeEmUsoException;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.repository.CidadeRepository;
 
@@ -62,7 +61,7 @@ public class CidadeService {
             throw new EntidadeNaoEncontradaException(
                     String.format(MSG_ENTIDADE_NAO_ENCONTRADA, id));
         } catch (DataIntegrityViolationException e){
-            throw new EntidadeEmUsoException(MSG_ENTIDADE_EM_USO);
+            throw new EntidadeNaoEncontradaException(MSG_ENTIDADE_EM_USO);
         }
     }
 }

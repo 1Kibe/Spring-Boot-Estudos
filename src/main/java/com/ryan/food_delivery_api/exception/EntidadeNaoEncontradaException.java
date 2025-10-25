@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 //anote a resposta desejada no ResponseStatus
 
 @ResponseStatus(HttpStatus.NOT_FOUND) 
-public class EntidadeNaoEncontradaException extends RuntimeException{
+public class EntidadeNaoEncontradaException extends NegocioException{
     //extends com ResponseStatusException
     //gera um superconstrutor
     
