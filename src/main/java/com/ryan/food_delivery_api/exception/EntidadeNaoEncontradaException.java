@@ -21,5 +21,9 @@ public abstract class EntidadeNaoEncontradaException extends NegocioException{
     public EntidadeNaoEncontradaException(String mensagem){
         super(mensagem);
         //this(HttpStatus.NOT_FOUND, mensagem);
-    }    
+    }
+
+    public EntidadeNaoEncontradaException(String mensagem, Throwable causa){
+        super(mensagem,causa);
+    }
 }

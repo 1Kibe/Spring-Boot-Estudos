@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.domain.Estado;
+import com.ryan.food_delivery_api.exception.cidade.CidadeEmUsoException;
 import com.ryan.food_delivery_api.exception.cidade.CidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.repository.CidadeRepository;
 
 @Service
 public class CidadeService {
-
-    private static final String MSG_ENTIDADE_EM_USO = "Entidade atual nao pode ser removida, pois esta em uso";
 
     @Autowired
     private CidadeRepository repository;
@@ -58,7 +57,7 @@ public class CidadeService {
         } catch (EmptyResultDataAccessException e) {
             throw new CidadeNaoEncontradaException(id);
         } catch (DataIntegrityViolationException e){
-            throw new CidadeNaoEncontradaException(MSG_ENTIDADE_EM_USO);
+            throw new CidadeEmUsoException(id,Cidade.class);
         }
     }
 }

@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Cozinha;
 import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
+import com.ryan.food_delivery_api.exception.restaurante.RestauranteEmUsoException;
 import com.ryan.food_delivery_api.exception.restaurante.RestauranteNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.RestauranteRepository;
 
@@ -55,6 +57,9 @@ public class RestauranteService {
             repository.deleteById(id);
         } catch (EntidadeNaoEncontradaException e) {
             throw new RestauranteNaoEncontradoException(id);
+        } catch (DataIntegrityViolationException e){
+            throw new RestauranteEmUsoException(id,Restaurante.class);
         }
+        
     }
 }

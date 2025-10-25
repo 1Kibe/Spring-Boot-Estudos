@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Problema {
+public class ModeloLayout {
     //layout da resposta do body customizado
 
     private OffsetDateTime dataHora;

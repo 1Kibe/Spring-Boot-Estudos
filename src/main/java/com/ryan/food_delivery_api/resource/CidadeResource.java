@@ -1,14 +1,11 @@
 package com.ryan.food_delivery_api.resource;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.NegocioException;
-import com.ryan.food_delivery_api.exception.exceptionHandler.Problema;
 import com.ryan.food_delivery_api.service.CidadeService;
 
 @RestController
@@ -75,33 +71,6 @@ public class CidadeResource {
     public void deletar(@PathVariable Long id) {
         service.deletar(id);
     }
-
-
-
-    //customiza o body de resposta
-    @ExceptionHandler(EntidadeNaoEncontradaException.class)
-    public ResponseEntity<?> tratarEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e){
-        Problema layoutBodyy = Problema.builder()
-            .dataHora(OffsetDateTime.now())
-            .mensagem(e.getMessage())
-            .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(layoutBodyy);
-    }
-
-    @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<?> tratarNegocioException(NegocioException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
-
-
-
-
-
-
-
-
 
     /*
      Buscar cidade inexistente (GET /cidades/{id})

@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Estado;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
+import com.ryan.food_delivery_api.exception.estado.EstadoEmUsoException;
 import com.ryan.food_delivery_api.exception.estado.EstadoNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.EstadoRepository;
 
 @Service
 public class EstadoService {
-
-    private static final String MSG_ENTIDADE_EM_USO = "Entidade atual nao pode ser removida, pois esta em uso";
 
     @Autowired
     private EstadoRepository repository;
@@ -49,7 +48,7 @@ public class EstadoService {
             throw new EstadoNaoEncontradoException(id);
                     
         } catch (DataIntegrityViolationException e){
-            throw new EstadoNaoEncontradoException(MSG_ENTIDADE_EM_USO);
+            throw new EstadoEmUsoException(id,Estado.class);
         }
     }
 }

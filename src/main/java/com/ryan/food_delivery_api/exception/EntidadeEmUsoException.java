@@ -9,4 +9,8 @@ public class EntidadeEmUsoException extends NegocioException{
     public EntidadeEmUsoException(String mensagem){
         super(mensagem);
     }
+
+    public EntidadeEmUsoException(String mensagem, Throwable causa){
+        super(mensagem,causa);
+    }
 }
