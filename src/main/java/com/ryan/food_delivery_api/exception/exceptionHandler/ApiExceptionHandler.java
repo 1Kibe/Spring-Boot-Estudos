@@ -31,7 +31,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         //cria um body com build
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType,_detail).build();
 
-        
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
 
@@ -39,14 +38,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<?> tratarNegocioException(NegocioException e, WebRequest request) {
 
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        HttpStatus _status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.ERRO_NEGOCIO;
+        String _detail = e.getMessage();
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType,_detail).build();
+
+        return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
-    
+
 
     @ExceptionHandler(EntidadeEmUsoException.class)
     public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
 
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        HttpStatus _status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.ERRO_NEGOCIO;
+        String _detail = e.getMessage();
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType,_detail).build();
+
+        return handleExceptionInternal(e,layoutBodyy, new HttpHeaders(), _status, request);
     }
 
     // --------------------------------------------------------------------------------------------------
