@@ -132,7 +132,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         String _detail = "O corpo da requisição esta invalido. Verifique erro de sintaxe";
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(_detail)
+        .build();
 
         return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), _status, request);
     }    
@@ -158,7 +160,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         String _detail = String.format("A propriedade '%s' não existe.", path);
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(_detail)
+        .build();
 
         return handleExceptionInternal(ex, layoutBodyy, headers, _status, request);
     }
@@ -215,7 +219,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 path, ex.getValue(),
                 ex.getRequiredType().getSimpleName());
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+        .build();
 
         // Lembre-se de usar o status definido (_status), não o status que veio como
         // argumento do Spring,
@@ -237,7 +243,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         String _detail = String.format("O recurso '%s', que vocẽ tentou acessar, é inexistente.", path);
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(_detail)
+        .build();
 
         return handleExceptionInternal(ex, layoutBodyy, headers, _status, request);
     }
