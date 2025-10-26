@@ -19,7 +19,7 @@ public class ModeloLayout {
     private String title;
     private String detail;
     private String userMessage;
-    private List<Propriedade> propriedades;
+    private List<Propriedade> field;
 
 @Getter
 @Builder

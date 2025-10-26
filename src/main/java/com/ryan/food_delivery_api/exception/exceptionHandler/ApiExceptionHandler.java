@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -252,7 +253,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // -------------------------------------------------------------------------------------------
-    // trata campos invalidos
+    // Trata erros de validação (@Valid) do corpo da requisição.
+    // Retorna 400 Bad Request, listando quais campos falharam e a mensagem do erro.
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -261,7 +264,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.DADOS_INVALIDOS;
         String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 
+        // Obtém o objeto que contém todos os resultados da validação.
+        BindingResult bindResult = ex.getBindingResult();
+
+        // Inicia o mapeamento dos erros de campo para o formato customizado (ModeloLayout.Propriedade).
+        List<ModeloLayout.Propriedade> propriedades = bindResult.getFieldErrors().stream()
+                .map(fieldError -> ModeloLayout.Propriedade.builder()
+                        .name(fieldError.getField())
+                        .userMessage(fieldError.getDefaultMessage())
+                        .build())
+                .collect(Collectors.toList());
+
         ModeloLayout modeloLayout = createModeloLayoutBuilder(_status, problemType, detail)
+                .field(propriedades)
                 .userMessage(detail)
                 .build();
 
