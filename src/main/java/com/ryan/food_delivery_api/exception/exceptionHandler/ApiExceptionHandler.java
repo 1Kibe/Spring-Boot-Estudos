@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -42,8 +43,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         // cria um body com build
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(_detail)
-        .build();
+                .userMessage(_detail)
+                .build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
@@ -56,8 +57,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String _detail = e.getMessage();
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(_detail)
-        .build();
+                .userMessage(_detail)
+                .build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
@@ -70,8 +71,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String _detail = e.getMessage();
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(_detail)
-        .build();
+                .userMessage(_detail)
+                .build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
@@ -133,11 +134,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String _detail = "O corpo da requisição esta invalido. Verifique erro de sintaxe";
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(_detail)
-        .build();
+                .userMessage(_detail)
+                .build();
 
         return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), _status, request);
-    }    
+    }
 
     // --------------------------------------------------------------------------------------------------
     private String joinPath(List<Reference> references) {
@@ -161,8 +162,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String _detail = String.format("A propriedade '%s' não existe.", path);
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(_detail)
-        .build();
+                .userMessage(_detail)
+                .build();
 
         return handleExceptionInternal(ex, layoutBodyy, headers, _status, request);
     }
@@ -182,8 +183,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getTargetType().getSimpleName());
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-        .build();
+                .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+                .build();
 
         return handleExceptionInternal(ex, layoutBodyy, headers, status, request);
     }
@@ -220,8 +221,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getRequiredType().getSimpleName());
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-        .build();
+                .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+                .build();
 
         // Lembre-se de usar o status definido (_status), não o status que veio como
         // argumento do Spring,
@@ -244,10 +245,27 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String _detail = String.format("O recurso '%s', que vocẽ tentou acessar, é inexistente.", path);
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
-        .userMessage(_detail)
-        .build();
+                .userMessage(_detail)
+                .build();
 
         return handleExceptionInternal(ex, layoutBodyy, headers, _status, request);
+    }
+
+    // -------------------------------------------------------------------------------------------
+    // trata campos invalidos
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        HttpStatus _status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+        String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+
+        ModeloLayout modeloLayout = createModeloLayoutBuilder(_status, problemType, detail)
+                .userMessage(detail)
+                .build();
+
+        return handleExceptionInternal(ex, modeloLayout, headers, status, request);
     }
 
     // --------------------------------------------------------------------------------------------------
