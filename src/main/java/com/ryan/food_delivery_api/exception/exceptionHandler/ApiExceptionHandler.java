@@ -110,6 +110,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // --------------------------------------------------------------------------------------------------
+    // qualquer exception nao tratada
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<Object> hendleUncaught(Exception ex, WebRequest request) {
+
+        HttpStatus _status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
+        String _detail = String.format("Erro inesperado no sistema, contactar o suporte");
+
+        // Imprime o rastreamento completo da pilha da exceção (stack trace) no console
+        // do servidor.
+        // Útil para diagnóstico e depuração, mostrando a causa raiz e a sequência de
+        // chamadas.
+        ex.printStackTrace();
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+
+        return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), _status, request);
+    }
+
+    // --------------------------------------------------------------------------------------------------
     private String joinPath(List<Reference> references) {
         // Constrói o caminho completo do campo do JSON que está inválido (ex:
         // "cidade.id").
@@ -156,7 +176,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     // --------------------------------------------------------------------------------------------------
 
-    //2025-10-25T22:08:04.917-03:00  WARN 511880 --- [food-delivery-api] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource restaurante.]
+    // 2025-10-25T22:08:04.917-03:00 WARN 511880 --- [food-delivery-api]
+    // [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved
+    // [org.springframework.web.servlet.resource.NoResourceFoundException: No static
+    // resource restaurante.]
 
     // Metodo para Captura,
     @Override
@@ -181,6 +204,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus _status = HttpStatus.BAD_REQUEST;
         ProblemType problemType = ProblemType.PARAMETRO_INVALIDO;
 
+        @SuppressWarnings("null")
         String _detail = String.format("O parâmetro de URL '%s' recebeu o valor '%s', "
                 + "que é de um tipo inválido. Tipo esperado: %s.",
                 path, ex.getValue(),
@@ -196,7 +220,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     // -------------------------------------------------------------------------------------------
 
-    //trata url invalida 
+    // trata url invalida
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -206,7 +230,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus _status = HttpStatus.NOT_FOUND;
         ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
 
-        String _detail = String.format("O recurso '%s', que vocẽ tentou acessar, é inexistente.",path);
+        String _detail = String.format("O recurso '%s', que vocẽ tentou acessar, é inexistente.", path);
 
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
 
