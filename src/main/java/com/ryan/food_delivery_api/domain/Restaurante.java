@@ -28,7 +28,12 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //@NotNull
+    //@NotEmpty
+    //@NotBlank
     private String nome;
+
+    //@DecimalMin("0")
     private BigDecimal taxaFrete;
 
     @Embedded       //chama o Embeddable
