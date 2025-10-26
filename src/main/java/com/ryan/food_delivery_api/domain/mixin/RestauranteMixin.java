@@ -6,12 +6,16 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ryan.food_delivery_api.domain.Cozinha;
+import com.ryan.food_delivery_api.domain.Endereco;
 import com.ryan.food_delivery_api.domain.FormaPagamento;
 import com.ryan.food_delivery_api.domain.Pedido;
 import com.ryan.food_delivery_api.domain.Produto;
 
 
 public class RestauranteMixin {
+
+    @JsonIgnore
+    private Endereco endereco;
 
     @JsonIgnore
     private List<Produto> produtos = new ArrayList<>();
