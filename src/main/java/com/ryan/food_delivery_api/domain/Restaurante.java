@@ -48,6 +48,7 @@ public class Restaurante {
     //@NotNull
     //@Valid
     @ManyToOne
+    //@JsonIgnoreProperties(value = {"nome"},allowGetters = true) // ignora a propriedade nome da cozinha quando vor mostrar no json
     private Cozinha cozinha;
 
     //ATENCAO cuidado com a rota Put ao implementa @ManyToMany
