@@ -13,6 +13,8 @@ import com.ryan.food_delivery_api.exception.cozinha.CozinhaNaoEncontradaExceptio
 import com.ryan.food_delivery_api.exception.cozinha.CozinhaEmUsoException;
 import com.ryan.food_delivery_api.repository.CozinhaRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CozinhaService {
 
@@ -23,24 +25,29 @@ public class CozinhaService {
         this.repository = repository;
     }
 
+    @Transactional
     public List<Cozinha> listar() {
         return repository.findAll();
     }
 
+    @Transactional
     public Optional<Cozinha> buscar(Long id) {
         return repository.findById(id);
     }
 
+    @Transactional
     public Cozinha buscarOuFalhar(Long id) {
         // ResponseStatus
         return repository.findById(id)
                 .orElseThrow(() -> new CozinhaNaoEncontradaException(id));
     }
 
+    @Transactional
     public Cozinha salvar(Cozinha cozinha) {
         return repository.save(cozinha);
     }
 
+    @Transactional
     public void deletar(Long id) {
         try {
             repository.deleteById(id);

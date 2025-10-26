@@ -13,6 +13,9 @@ import com.ryan.food_delivery_api.exception.estado.EstadoEmUsoException;
 import com.ryan.food_delivery_api.exception.estado.EstadoNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.EstadoRepository;
 
+import jakarta.transaction.Transactional;
+
+
 @Service
 public class EstadoService {
 
@@ -27,20 +30,24 @@ public class EstadoService {
         this.repository = repository;
     }
 
+    @Transactional
     public Optional<Estado> buscar(Long id) {
         return repository.findById(id);
     }
 
+    @Transactional
     public Estado buscarOuFalhar(Long id) {
         // ResponseStatus
         return repository.findById(id)
                 .orElseThrow(() -> new EstadoNaoEncontradoException(id));
     }
 
+    @Transactional
     public Estado salvar(Estado obj) {
         return repository.save(obj);
     }
 
+    @Transactional
     public void deletar(Long id) {
         try {
             repository.deleteById(id);

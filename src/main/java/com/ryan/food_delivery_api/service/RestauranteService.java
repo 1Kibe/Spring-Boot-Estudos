@@ -14,6 +14,8 @@ import com.ryan.food_delivery_api.exception.restaurante.RestauranteEmUsoExceptio
 import com.ryan.food_delivery_api.exception.restaurante.RestauranteNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.RestauranteRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class RestauranteService {
 
@@ -27,22 +29,26 @@ public class RestauranteService {
         this.repository = repository;
     }
 
+    @Transactional
     public List<Restaurante> listar() {
         return repository.findAllCat();
     }
 
+    @Transactional
     public Optional<Restaurante> buscar(Long id) {
 
         return repository.findById(id);
 
     }
 
+    @Transactional
     public Restaurante buscarOuFalhar(Long id) {
         // ResponseStatus
         return repository.findById(id)
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(id));
     }
 
+    @Transactional
     public Restaurante salvar(Restaurante obj) {
         Long atributoId = obj.getCozinha().getId();
         Cozinha atributo = cozinhaService.buscarOuFalhar(atributoId);
@@ -52,6 +58,7 @@ public class RestauranteService {
         return repository.save(obj);
     }
 
+    @Transactional
     public void deletar(Long id) {
         try {
             repository.deleteById(id);
