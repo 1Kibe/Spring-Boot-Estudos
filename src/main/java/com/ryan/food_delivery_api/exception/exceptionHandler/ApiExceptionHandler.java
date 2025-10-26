@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
@@ -155,6 +156,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     // --------------------------------------------------------------------------------------------------
 
+    //2025-10-25T22:08:04.917-03:00  WARN 511880 --- [food-delivery-api] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource restaurante.]
+
     // Metodo para Captura,
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
@@ -188,6 +191,25 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         // Lembre-se de usar o status definido (_status), não o status que veio como
         // argumento do Spring,
         // para que seu layoutBodyy seja usado corretamente.
+        return handleExceptionInternal(ex, layoutBodyy, headers, _status, request);
+    }
+
+    // -------------------------------------------------------------------------------------------
+
+    //trata url invalida 
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        String path = ex.getRequestURL();
+
+        HttpStatus _status = HttpStatus.NOT_FOUND;
+        ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
+
+        String _detail = String.format("O recurso '%s', que vocẽ tentou acessar, é inexistente.",path);
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+
         return handleExceptionInternal(ex, layoutBodyy, headers, _status, request);
     }
 
