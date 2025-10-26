@@ -118,7 +118,7 @@ public class RestauranteResource {
             });
         } catch (IllegalArgumentException e) {
             Throwable rootCause = ExceptionUtils.getRootCause(e);
-            
+
             throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
         }
 
