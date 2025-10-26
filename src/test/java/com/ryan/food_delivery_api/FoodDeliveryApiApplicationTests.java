@@ -10,4 +10,10 @@ class FoodDeliveryApiApplicationTests {
 	void contextLoads() {
 	}
 
+		//cenario
+        //acao
+        //validacao
+
+		//Conteudo do curso parece desatualizado, 10.0 -> 10.17
+
 }
