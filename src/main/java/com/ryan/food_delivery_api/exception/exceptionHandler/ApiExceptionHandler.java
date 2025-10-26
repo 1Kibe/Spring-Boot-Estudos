@@ -30,6 +30,8 @@ import com.ryan.food_delivery_api.exception.NegocioException;
                   // tratadas aqui
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Erro inesperado no sistema, contactar o suporte";
+
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
     public ResponseEntity<?> tratarEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e,
             WebRequest request) {
@@ -39,7 +41,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String _detail = e.getMessage();
 
         // cria um body com build
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(_detail)
+        .build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
@@ -51,7 +55,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ERRO_NEGOCIO;
         String _detail = e.getMessage();
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(_detail)
+        .build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
@@ -63,7 +69,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ERRO_NEGOCIO;
         String _detail = e.getMessage();
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(_detail)
+        .build();
 
         return handleExceptionInternal(e, layoutBodyy, new HttpHeaders(), _status, request);
     }
@@ -82,7 +90,27 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     // --------------------------------------------------------------------------------------------------
     // Handler
-    // Forma Padrao
+    // Formas Padrao
+    // --------------------------------------------------------------------------------------------------
+
+    // qualquer exception nao tratada
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<Object> hendleUncaught(Exception ex, WebRequest request) {
+
+        HttpStatus _status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
+        String _detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
+
+        // Imprime o rastreamento completo da pilha da exceção (stack trace) no console
+        // do servidor.
+        // Útil para diagnóstico e depuração, mostrando a causa raiz e a sequência de
+        // chamadas.
+        ex.printStackTrace();
+
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+
+        return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), _status, request);
+    }
     // --------------------------------------------------------------------------------------------------
 
     // Para erros gerais de sintaxe no json
@@ -107,27 +135,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
 
         return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), _status, request);
-    }
-
-    // --------------------------------------------------------------------------------------------------
-    // qualquer exception nao tratada
-    @ExceptionHandler(Exception.class)
-    private ResponseEntity<Object> hendleUncaught(Exception ex, WebRequest request) {
-
-        HttpStatus _status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
-        String _detail = String.format("Erro inesperado no sistema, contactar o suporte");
-
-        // Imprime o rastreamento completo da pilha da exceção (stack trace) no console
-        // do servidor.
-        // Útil para diagnóstico e depuração, mostrando a causa raiz e a sequência de
-        // chamadas.
-        ex.printStackTrace();
-
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
-
-        return handleExceptionInternal(ex, layoutBodyy, new HttpHeaders(), _status, request);
-    }
+    }    
 
     // --------------------------------------------------------------------------------------------------
     private String joinPath(List<Reference> references) {
@@ -169,17 +177,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 + "que é de um tipo inválido. Tipo esperado: %s", path, ex.getValue(),
                 ex.getTargetType().getSimpleName());
 
-        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail).build();
+        ModeloLayout layoutBodyy = createModeloLayoutBuilder(_status, problemType, _detail)
+        .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
+        .build();
 
         return handleExceptionInternal(ex, layoutBodyy, headers, status, request);
     }
 
     // --------------------------------------------------------------------------------------------------
-
-    // 2025-10-25T22:08:04.917-03:00 WARN 511880 --- [food-delivery-api]
-    // [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved
-    // [org.springframework.web.servlet.resource.NoResourceFoundException: No static
-    // resource restaurante.]
 
     // Metodo para Captura,
     @Override
@@ -247,14 +252,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (arg1 == null) {
             arg1 = ModeloLayout.builder()
-                    .dataHora(OffsetDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .status(arg3.value())
                     .title(((HttpStatus) arg3).getReasonPhrase())
                     .build();
 
         } else if (arg1 instanceof String) {
             arg1 = ModeloLayout.builder()
-                    .dataHora(OffsetDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .status(arg3.value())
                     .title(((String) arg1))
                     .build();

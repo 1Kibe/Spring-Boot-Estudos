@@ -12,9 +12,10 @@ import lombok.Getter;
 @Builder
 public class ModeloLayout {
     //layout da resposta do body customizado
-    private OffsetDateTime dataHora;
+    private OffsetDateTime timestamp;
     private Integer status;
     private String type;
     private String title;
     private String detail;
+    private String userMessage;
 }
