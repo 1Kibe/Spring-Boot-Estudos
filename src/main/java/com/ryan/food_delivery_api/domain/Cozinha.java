@@ -9,6 +9,7 @@ import lombok.Data;
 @Entity
 @Data
 public class Cozinha {
+    //@NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

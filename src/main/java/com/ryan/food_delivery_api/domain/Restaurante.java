@@ -45,6 +45,8 @@ public class Restaurante {
     @OneToMany(mappedBy = "restaurante")
     private List<Pedido> pedidos = new ArrayList<>();
 
+    //@NotNull
+    //@Valid
     @ManyToOne
     private Cozinha cozinha;
 
