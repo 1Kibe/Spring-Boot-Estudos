@@ -2,7 +2,6 @@ package com.ryan.food_delivery_api.resource;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Estado;
+import com.ryan.food_delivery_api.domain.dto.assembler.estado.EstadoDtoAssembler;
+import com.ryan.food_delivery_api.domain.dto.assembler.estado.EstadoDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.estado.EstadoDto;
+import com.ryan.food_delivery_api.domain.dto.estado.EstadoInputDto;
 import com.ryan.food_delivery_api.service.EstadoService;
 
 @RestController
@@ -25,35 +28,40 @@ public class EstadoResource {
     @Autowired
     private EstadoService service;
 
+    @Autowired
+    private EstadoDtoAssembler estadoDtoAssembler;
+
+    @Autowired
+    private EstadoDtoDisassembler estadoDtoDisassembler;
+
     public EstadoResource(EstadoService service) {
         this.service = service;
     }
 
-
     @GetMapping()
-    public List<Estado> listar() {
-        return service.listar();
+    public List<EstadoDto> listar() {
+        return estadoDtoAssembler.toCollectionModel(service.listar());
     }
 
     @GetMapping("/{id}")
-    public Estado findById(@PathVariable Long id){
-        return service.buscarOuFalhar(id);
+    public EstadoDto findById(@PathVariable Long id){
+        return estadoDtoAssembler.toModel(service.buscarOuFalhar(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado salvar(@RequestBody Estado obj) {
-        return service.salvar(obj);
+    public EstadoDto salvar(@RequestBody EstadoInputDto obj) {
+        Estado entity = estadoDtoDisassembler.toDomainObject(obj);
+        return estadoDtoAssembler.toModel(entity);
     }
 
     @PutMapping("/{id}")
-    public Estado atualizar(@PathVariable Long id, @RequestBody Estado entity) {
+    public EstadoDto atualizar(@PathVariable Long id, @RequestBody EstadoInputDto entity) {
             Estado entidadeAtual = service.buscarOuFalhar(id);
 
-            BeanUtils.copyProperties(entity, entidadeAtual,
-            "id");
+            estadoDtoDisassembler.copyToDomainObject(entity, entidadeAtual);
 
-            return service.salvar(entidadeAtual);
+            return estadoDtoAssembler.toModel(entidadeAtual);
             
     }
 
