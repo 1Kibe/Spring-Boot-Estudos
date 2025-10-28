@@ -2,7 +2,6 @@ package com.ryan.food_delivery_api.resource;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +21,7 @@ import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteDto;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteInputDto;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.NegocioException;
+import com.ryan.food_delivery_api.exception.cozinha.CozinhaNaoEncontradaException;
 import com.ryan.food_delivery_api.service.RestauranteService;
 
 @RestController
@@ -65,16 +65,24 @@ public class RestauranteResource {
     }
 
     @PutMapping("/{id}")
-    public RestauranteDto atualizar(@PathVariable Long id, @RequestBody RestauranteInputDto entity) {
-        Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(entity);
+    public RestauranteDto atualizar(@PathVariable Long id, @RequestBody RestauranteInputDto input) {
+        try {
 
-        Restaurante entidadeAtual = service.buscarOuFalhar(id);
+            Restaurante entidadeAtual = service.buscarOuFalhar(id);
 
-        BeanUtils.copyProperties(restaurante, entidadeAtual,
-                "id", "formasPagameto", "endereco", "dataCriacao", "dataAtualizacao");
+            //Com ModelMapper
+            restauranteDtoDisassembler.copyToDomainObject(input, entidadeAtual);
 
-        return restauranteDtoAssembler.toModel(service.salvar(entidadeAtual));
 
+            //Com BeanUtils
+            // Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(input);
+            // BeanUtils.copyProperties(restaurante, entidadeAtual,
+            // "id", "formasPagameto", "endereco", "dataCriacao", "dataAtualizacao");
+
+            return restauranteDtoAssembler.toModel(service.salvar(entidadeAtual));
+        } catch (CozinhaNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     // @PatchMapping("/{id}")
