@@ -5,11 +5,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Cozinha;
+import com.ryan.food_delivery_api.domain.dto.assembler.cozinha.CozinhaDtoAssembler;
+import com.ryan.food_delivery_api.domain.dto.assembler.cozinha.CozinhaDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaDto;
+import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaInputDto;
 import com.ryan.food_delivery_api.service.CozinhaService;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,8 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaResource {
@@ -28,36 +29,41 @@ public class CozinhaResource {
     @Autowired
     private CozinhaService service;
 
+    @Autowired
+    private CozinhaDtoAssembler cozinhaDtoAssembler;
+
+    @Autowired
+    private CozinhaDtoDisassembler cozinhaDtoDisassembler;
+
     public CozinhaResource(CozinhaService service) {
         this.service = service;
     }
 
     @GetMapping()
-    public List<Cozinha> listar() {
-        return service.listar();
+    public List<CozinhaDto> listar() {
+        return cozinhaDtoAssembler.toCollectionModel(service.listar());
     }
 
     @GetMapping("/{id}")
-    public Cozinha findById(@PathVariable Long id){
-        return service.buscarOuFalhar(id);
+    public CozinhaDto findById(@PathVariable Long id) {
+        return cozinhaDtoAssembler.toModel(service.buscarOuFalhar(id));
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha salvar(@RequestBody Cozinha obj) {
-        return service.salvar(obj);
+    public CozinhaDto salvar(@RequestBody CozinhaInputDto inputDto) {
+        Cozinha cozinha = cozinhaDtoDisassembler.toDomainObject(inputDto);
+        return cozinhaDtoAssembler.toModel(service.salvar(cozinha));
     }
 
     @PutMapping("/{id}")
-    public Cozinha atualizar(@PathVariable Long id, @RequestBody Cozinha entity) {
-            Cozinha entidadeAtual = service.buscarOuFalhar(id);
+    public CozinhaDto atualizar(@PathVariable Long id, @RequestBody CozinhaInputDto entity) {
+        Cozinha atual = service.buscarOuFalhar(id);
 
-            BeanUtils.copyProperties(entity, entidadeAtual,
-            "id","formasPagameto","endereco","dataCriacao","dataAtualizacao");
+        cozinhaDtoDisassembler.copyToDomainObject(entity, atual);
 
-            return service.salvar(entidadeAtual);
-            
+        return cozinhaDtoAssembler.toModel(service.salvar(atual)) ;
+
     }
 
     @DeleteMapping("/{id}")
@@ -66,6 +72,4 @@ public class CozinhaResource {
         service.deletar(id);
     }
 
-    
-    
 }
