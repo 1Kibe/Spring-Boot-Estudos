@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Cozinha;
-import com.ryan.food_delivery_api.domain.dto.assembler.cozinha.CozinhaDtoAssembler;
-import com.ryan.food_delivery_api.domain.dto.assembler.cozinha.CozinhaDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.cozinha.CozinhaDtoAssembler;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.cozinha.CozinhaDtoDisassembler;
 import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaDto;
 import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaInputDto;
 import com.ryan.food_delivery_api.service.CozinhaService;

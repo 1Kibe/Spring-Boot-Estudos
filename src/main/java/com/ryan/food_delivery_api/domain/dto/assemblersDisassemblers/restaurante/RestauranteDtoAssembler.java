@@ -1,4 +1,4 @@
-package com.ryan.food_delivery_api.domain.dto.assembler.restaurante;
+package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.restaurante;
 
 import java.util.List;
 import java.util.stream.Collectors;

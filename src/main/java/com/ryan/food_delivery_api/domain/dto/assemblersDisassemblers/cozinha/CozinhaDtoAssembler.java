@@ -1,4 +1,4 @@
-package com.ryan.food_delivery_api.domain.dto.assembler.cozinha;
+package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.cozinha;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Estado;
-import com.ryan.food_delivery_api.domain.dto.assembler.estado.EstadoDtoAssembler;
-import com.ryan.food_delivery_api.domain.dto.assembler.estado.EstadoDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.estado.EstadoDtoAssembler;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.estado.EstadoDtoDisassembler;
 import com.ryan.food_delivery_api.domain.dto.estado.EstadoDto;
 import com.ryan.food_delivery_api.domain.dto.estado.EstadoInputDto;
 import com.ryan.food_delivery_api.service.EstadoService;

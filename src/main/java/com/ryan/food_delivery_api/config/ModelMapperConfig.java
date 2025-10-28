@@ -1,4 +1,4 @@
-package com.ryan.food_delivery_api.domain.dto.assembler;
+package com.ryan.food_delivery_api.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.ryan.food_delivery_api.domain.dto.assembler.cidade;
+package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.cidade;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Cidade;
-import com.ryan.food_delivery_api.domain.dto.assembler.cidade.CidadeDtoAssembler;
-import com.ryan.food_delivery_api.domain.dto.assembler.cidade.CidadeDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.cidade.CidadeDtoAssembler;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.cidade.CidadeDtoDisassembler;
 import com.ryan.food_delivery_api.domain.dto.cidade.CidadeDto;
 import com.ryan.food_delivery_api.domain.dto.cidade.CidadeInputDto;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
