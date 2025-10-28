@@ -17,7 +17,8 @@ public class RestauranteDtoDisassembler {
     }
 
     public void copyToDomainObject(RestauranteInputDto inputDto, Restaurante entit){
-        //trata erro de auteracao 
+        //Trata essa execption org.hibernate.Hibernateexception: identifier os an instance of 
+        //com.ryan.food_delivery_api.domain.Cozinha was altered from 1 to 2
         entit.setCozinha(new Cozinha());
         modelMapper.map(inputDto, entit);
     }
