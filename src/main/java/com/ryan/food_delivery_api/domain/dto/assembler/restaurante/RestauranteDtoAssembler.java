@@ -3,25 +3,21 @@ package com.ryan.food_delivery_api.domain.dto.assembler.restaurante;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ryan.food_delivery_api.domain.Restaurante;
-import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaDto;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteDto;
 
 @Component
 public class RestauranteDtoAssembler {
 
-    public RestauranteDto toModel(Restaurante restaurante) {
-        CozinhaDto cozinhaDto = new CozinhaDto();
-        cozinhaDto.setId(restaurante.getCozinha().getId());
-        cozinhaDto.setNome(restaurante.getCozinha().getNome());
+    @Autowired
+    private ModelMapper modelMapper;
 
-        RestauranteDto restauranteDto = new RestauranteDto();
-        restaurante.setId(restaurante.getId());
-        restauranteDto.setNome(restaurante.getNome());
-        restauranteDto.setTaxaFrete(restaurante.getTaxaFrete());
-        return restauranteDto;
+    public RestauranteDto toModel(Restaurante restaurante) {
+        return modelMapper.map(restaurante, RestauranteDto.class);
     }
 
     public List<RestauranteDto> toCollectionModel(List<Restaurante> restaurantes) {
