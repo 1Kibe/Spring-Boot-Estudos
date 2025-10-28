@@ -16,12 +16,12 @@ public class RestauranteDtoAssembler {
     @Autowired
     private ModelMapper modelMapper;
 
-    public RestauranteDto toModel(Restaurante restaurante) {
-        return modelMapper.map(restaurante, RestauranteDto.class);
+    public RestauranteDto toModel(Restaurante entity) {
+        return modelMapper.map(entity, RestauranteDto.class);
     }
 
-    public List<RestauranteDto> toCollectionModel(List<Restaurante> restaurantes) {
-        return restaurantes.stream()
+    public List<RestauranteDto> toCollectionModel(List<Restaurante> entitys) {
+        return entitys.stream()
                 .map(restaurante -> toModel(restaurante))
                 .collect(Collectors.toList());
     }
