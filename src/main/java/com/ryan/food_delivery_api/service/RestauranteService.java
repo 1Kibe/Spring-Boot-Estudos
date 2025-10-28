@@ -62,6 +62,7 @@ public class RestauranteService {
     public void deletar(Long id) {
         try {
             repository.deleteById(id);
+            repository.flush();// para tratar erro de lancar exception depois do metodo
         } catch (EntidadeNaoEncontradaException e) {
             throw new RestauranteNaoEncontradoException(id);
         } catch (DataIntegrityViolationException e){

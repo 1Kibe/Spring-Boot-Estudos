@@ -61,6 +61,7 @@ public class CidadeService {
     public void deletar(Long id) {
         try {
             repository.deleteById(id);
+            repository.flush();
         } catch (EmptyResultDataAccessException e) {
             throw new CidadeNaoEncontradaException(id);
         } catch (DataIntegrityViolationException e){
