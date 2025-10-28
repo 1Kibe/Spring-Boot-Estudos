@@ -1,6 +1,8 @@
-package com.ryan.food_delivery_api.domain.dto;
+package com.ryan.food_delivery_api.domain.dto.restaurante;
 
 import java.math.BigDecimal;
+
+import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaDto;
 
 import lombok.Getter;
 import lombok.Setter;
