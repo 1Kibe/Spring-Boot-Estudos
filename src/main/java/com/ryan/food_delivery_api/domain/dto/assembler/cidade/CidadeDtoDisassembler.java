@@ -2,11 +2,12 @@ package com.ryan.food_delivery_api.domain.dto.assembler.cidade;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.ryan.food_delivery_api.domain.Estado;
 import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.domain.dto.cidade.CidadeInputDto;
-
+@Component
 public class CidadeDtoDisassembler {
 
     @Autowired

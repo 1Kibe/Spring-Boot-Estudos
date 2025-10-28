@@ -2,10 +2,11 @@ package com.ryan.food_delivery_api.domain.dto.assembler.cozinha;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.ryan.food_delivery_api.domain.Cozinha;
 import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaInputDto;
-
+@Component
 public class CozinhaDtoDisassembler {
 
     @Autowired
