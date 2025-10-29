@@ -1,7 +1,5 @@
 package com.ryan.food_delivery_api.domain.dto.formaPagamento;
 
-import com.ryan.food_delivery_api.domain.dto.pedido.PedidoDto;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +8,6 @@ import lombok.Setter;
 public class FormaPagamentoIdInputDto {
 
     private Long id;
-    private String nome;
-    private PedidoDto pedido;
+    private String descricao;
     private Boolean ativo;
 }

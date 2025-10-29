@@ -1,4 +1,4 @@
-package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.pedido.formaPagamento;
+package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.pedido;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

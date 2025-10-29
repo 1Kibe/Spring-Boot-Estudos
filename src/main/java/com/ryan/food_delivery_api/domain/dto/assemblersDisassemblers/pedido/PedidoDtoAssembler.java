@@ -1,4 +1,4 @@
-package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.pedido.formaPagamento;
+package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.pedido;
 
 import java.util.List;
 import java.util.stream.Collectors;
