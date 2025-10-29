@@ -3,6 +3,7 @@ package com.ryan.food_delivery_api.domain.dto.restaurante;
 import java.math.BigDecimal;
 
 import com.ryan.food_delivery_api.domain.dto.cozinha.CozinhaDto;
+import com.ryan.food_delivery_api.domain.dto.endereco.EnderecoDto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +17,5 @@ public class RestauranteDto {
     private BigDecimal taxaFrete;
     private CozinhaDto cozinha;
     private Boolean ativo;
+    private EnderecoDto endereco;
 }

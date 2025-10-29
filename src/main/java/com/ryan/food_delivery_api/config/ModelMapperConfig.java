@@ -4,11 +4,25 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.ryan.food_delivery_api.domain.Endereco;
+import com.ryan.food_delivery_api.domain.dto.endereco.EnderecoDto;
+
 @Configuration
 public class ModelMapperConfig {
 
     @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
+    public ModelMapper modelMapper() {
+        var modelMapper = new ModelMapper();
+
+        // Configura o ModelMapper para copiar o nome do estado
+        // (src.getCidade().getEstado().getNome())
+        // para o campo cidade.estado (String) do DTO, já que o modelo original possui
+        // uma hierarquia de objetos.
+        var enderecoToEnderecoDtoTypeMap = modelMapper.createTypeMap(Endereco.class, EnderecoDto.class);
+        enderecoToEnderecoDtoTypeMap.<String>addMapping(
+                enderecosrc -> enderecosrc.getCidade().getEstado().getNome(),
+                (enderecoDtodest, value) -> enderecoDtodest.getCidade().setEstado(value));
+
+        return modelMapper;
     }
 }
