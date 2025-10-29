@@ -19,8 +19,8 @@ import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.restaurante
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.restaurante.RestauranteDtoDisassembler;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteDto;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteInputDto;
-import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.NegocioException;
+import com.ryan.food_delivery_api.exception.cidade.CidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.cozinha.CozinhaNaoEncontradaException;
 import com.ryan.food_delivery_api.service.RestauranteService;
 
@@ -59,7 +59,7 @@ public class RestauranteResource {
             Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(obj);
 
             return restauranteDtoAssembler.toModel(restaurante);
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -72,14 +72,14 @@ public class RestauranteResource {
 
             // Com ModelMapper
             restauranteDtoDisassembler.copyToDomainObject(input, entidadeAtual);
-
+ 
             // Com BeanUtils
             // Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(input);
             // BeanUtils.copyProperties(restaurante, entidadeAtual,
             // "id", "formasPagameto", "endereco", "dataCriacao", "dataAtualizacao");
 
             return restauranteDtoAssembler.toModel(service.salvar(entidadeAtual));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }

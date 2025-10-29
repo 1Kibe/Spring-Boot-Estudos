@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.domain.Cozinha;
 import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
@@ -24,6 +25,9 @@ public class RestauranteService {
 
     @Autowired
     private CozinhaService cozinhaService;
+
+    @Autowired
+    private CidadeService cidadeService;
 
     public RestauranteService(RestauranteRepository repository) {
         this.repository = repository;
@@ -49,13 +53,28 @@ public class RestauranteService {
     }
 
     @Transactional
-    public Restaurante salvar(Restaurante obj) {
-        Long atributoId = obj.getCozinha().getId();
-        Cozinha atributo = cozinhaService.buscarOuFalhar(atributoId);
+    public Restaurante salvar(Restaurante entity) {
 
-        obj.setCozinha(atributo);
+        // Antes de salvar o restaurante, é necessário garantir que as entidades
+        // associadas
+        // (cozinha e cidade) estão gerenciadas pelo JPA e realmente existem no banco.
+        // Caso contrário, o Hibernate tentará inserir novas linhas em vez de associar
+        // as existentes,
+        // o que geraria um erro de integridade referencial
+        // (SqlIntegrityConstraintViolationException),
+        // pois os IDs informados podem não corresponder a registros válidos nas tabelas
+        // de cozinha e cidade.
 
-        return repository.save(obj);
+        Long cozinhaAtributoId = entity.getCozinha().getId();
+        Long cidadeAtrinutoId = entity.getEndereco().getCidade().getId();
+
+        Cozinha cozinha = cozinhaService.buscarOuFalhar(cozinhaAtributoId);
+        Cidade cidade = cidadeService.buscarOuFalhar(cidadeAtrinutoId);
+
+        entity.setCozinha(cozinha);
+        entity.getEndereco().setCidade(cidade);
+
+        return repository.save(entity);
     }
 
     @Transactional
@@ -65,22 +84,21 @@ public class RestauranteService {
             repository.flush();// para tratar erro de lancar exception depois do metodo
         } catch (EntidadeNaoEncontradaException e) {
             throw new RestauranteNaoEncontradoException(id);
-        } catch (DataIntegrityViolationException e){
-            throw new RestauranteEmUsoException(id,Restaurante.class);
+        } catch (DataIntegrityViolationException e) {
+            throw new RestauranteEmUsoException(id, Restaurante.class);
         }
     }
 
-
-    //Sub Rotas
+    // Sub Rotas
 
     @Transactional
-    public void ativar(Long id){
+    public void ativar(Long id) {
         Restaurante entityAtual = buscarOuFalhar(id);
         entityAtual.ativar();
     }
-    
+
     @Transactional
-    public void desativar(Long id){
+    public void desativar(Long id) {
         Restaurante entityAtual = buscarOuFalhar(id);
         entityAtual.desativar();
     }

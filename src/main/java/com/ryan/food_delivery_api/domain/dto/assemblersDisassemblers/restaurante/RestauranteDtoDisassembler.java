@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.domain.Cozinha;
 import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteInputDto;
@@ -21,6 +22,10 @@ public class RestauranteDtoDisassembler {
         //Trata essa execption org.hibernate.Hibernateexception: identifier os an instance of 
         //com.ryan.food_delivery_api.domain.Cozinha was altered from 1 to 2
         entit.setCozinha(new Cozinha());
+
+        if(entit.getEndereco() != null){
+            entit.getEndereco().setCidade(new Cidade());
+        }
         modelMapper.map(inputDto, entit);
     }
 
