@@ -1,0 +1,1 @@
+alter table forma_pagamento add ativo tinyint(1) not null;

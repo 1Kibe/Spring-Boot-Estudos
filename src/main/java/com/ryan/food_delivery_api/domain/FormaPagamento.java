@@ -19,4 +19,14 @@ public class FormaPagamento {
     @ManyToOne
     private Pedido pedido;
 
+    private Boolean ativo = Boolean.TRUE;
+
+    public void ativar() {
+        setAtivo(true);
+    }
+
+    public void desativar() {
+        setAtivo(false);
+    }
+
 }
