@@ -68,6 +68,20 @@ public class RestauranteService {
         } catch (DataIntegrityViolationException e){
             throw new RestauranteEmUsoException(id,Restaurante.class);
         }
-        
+    }
+
+
+    //Sub Rotas
+
+    @Transactional
+    public void ativar(Long id){
+        Restaurante entityAtual = buscarOuFalhar(id);
+        entityAtual.ativar();
+    }
+    
+    @Transactional
+    public void desativar(Long id){
+        Restaurante entityAtual = buscarOuFalhar(id);
+        entityAtual.desativar();
     }
 }

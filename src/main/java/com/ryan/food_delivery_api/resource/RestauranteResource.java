@@ -70,11 +70,10 @@ public class RestauranteResource {
 
             Restaurante entidadeAtual = service.buscarOuFalhar(id);
 
-            //Com ModelMapper
+            // Com ModelMapper
             restauranteDtoDisassembler.copyToDomainObject(input, entidadeAtual);
 
-
-            //Com BeanUtils
+            // Com BeanUtils
             // Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(input);
             // BeanUtils.copyProperties(restaurante, entidadeAtual,
             // "id", "formasPagameto", "endereco", "dataCriacao", "dataAtualizacao");
@@ -85,6 +84,28 @@ public class RestauranteResource {
         }
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletar(@PathVariable Long id) {
+        service.deletar(id);
+    }
+
+    //Sub Rotas
+
+
+    @PutMapping("/{id}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long id){
+        service.ativar(id);
+    }
+
+    @DeleteMapping("/{id}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void desativar(@PathVariable Long id){
+        service.desativar(id);
+    }
+
+
     // @PatchMapping("/{id}")
     // public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody
     // Map<String, Object> campos,
@@ -94,12 +115,6 @@ public class RestauranteResource {
     // merge(campos, restauranteAtual, request);
     // return atualizar(id, restauranteAtual);
     // }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar(@PathVariable Long id) {
-        service.deletar(id);
-    }
 
     // private void merge(Map<String, Object> dadosOrigem, Restaurante
     // restauranteDestino, HttpServletRequest request) {

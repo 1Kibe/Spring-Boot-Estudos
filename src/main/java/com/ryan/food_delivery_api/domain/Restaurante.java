@@ -39,6 +39,8 @@ public class Restaurante {
     @Embedded       //chama o Embeddable
     private Endereco endereco;
 
+    private Boolean ativo = Boolean.TRUE;
+
     @OneToMany(mappedBy = "restaurante") 
     private List<Produto> produtos = new ArrayList<>();
 
@@ -70,5 +72,13 @@ public class Restaurante {
     private OffsetDateTime dataAtualizacao;
 
     
+
+    public void ativar(){
+        setAtivo(true);
+    }
+    
+    public void desativar(){
+        setAtivo(false);
+    }
 
 }
