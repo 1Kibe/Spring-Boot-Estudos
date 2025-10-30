@@ -12,8 +12,8 @@ import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.formaPagame
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.formaPagamento.FormaPagamentoDtoDisassembler;
 import com.ryan.food_delivery_api.domain.dto.formaPagamento.FormaPagamentoDto;
 import com.ryan.food_delivery_api.domain.dto.formaPagamento.FormaPagamentoInputDto;
-import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.NegocioException;
+import com.ryan.food_delivery_api.exception.formaPagamento.FormaPagamentoNaoEncontradoException;
 import com.ryan.food_delivery_api.service.FormaPagamentoService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,7 +58,7 @@ public class FormaPagamentoResource {
         try {
             FormaPagamento entity = formaPagamentoDtoDisassembler.toDomainObject(input);
             return formaPagamentoDtoAssembler.toModel(entity);
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (FormaPagamentoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage());
         }
     }

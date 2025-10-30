@@ -19,8 +19,7 @@ import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.grupo.Grupo
 import com.ryan.food_delivery_api.domain.dto.grupo.GrupoDto;
 import com.ryan.food_delivery_api.domain.dto.grupo.GrupoInputDto;
 import com.ryan.food_delivery_api.exception.NegocioException;
-import com.ryan.food_delivery_api.exception.cidade.CidadeNaoEncontradaException;
-import com.ryan.food_delivery_api.exception.cozinha.CozinhaNaoEncontradaException;
+import com.ryan.food_delivery_api.exception.grupo.GrupoNaoEncontradoException;
 import com.ryan.food_delivery_api.service.GrupoService;
 
 @RestController
@@ -49,12 +48,12 @@ public class GrupoResource {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GrupoDto salvar(@RequestBody GrupoInputDto obj) {
+    public GrupoDto salvar(@RequestBody GrupoInputDto input) {
         try {
-            Grupo restaurante = disassembler.toDomainObject(obj);
+            Grupo entity = disassembler.toDomainObject(input);
 
-            return assembler.toModel(restaurante);
-        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
+            return assembler.toModel(entity);
+        } catch (GrupoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -68,7 +67,7 @@ public class GrupoResource {
             disassembler.copyToDomainObject(input, entidadeAtual);
  
             return assembler.toModel(service.salvar(entidadeAtual));
-        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
+        } catch (GrupoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage());
         }
     }

@@ -21,6 +21,7 @@ import com.ryan.food_delivery_api.domain.dto.cidade.CidadeDto;
 import com.ryan.food_delivery_api.domain.dto.cidade.CidadeInputDto;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.NegocioException;
+import com.ryan.food_delivery_api.exception.cidade.CidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.service.CidadeService;
 
 @RestController
@@ -57,7 +58,7 @@ public class CidadeResource {
         try{
             Cidade entity = cidadeDtoDisassembler.toDomainObject(obj);
             return cidadeDtoAssembler.toModel(service.salvar(entity));
-        } catch (EntidadeNaoEncontradaException e){
+        } catch (CidadeNaoEncontradaException e){
             throw new NegocioException(e.getMessage(), e);
         }
     }

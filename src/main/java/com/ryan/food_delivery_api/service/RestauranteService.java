@@ -98,6 +98,7 @@ public class RestauranteService {
     }
 
     // Sub Rotas
+    // ===============================
 
     @Transactional
     public void ativar(Long id) {
@@ -111,8 +112,10 @@ public class RestauranteService {
         entityAtual.desativar();
     }
 
+    // ===============================
+
     @Transactional
-    public void removerFormaPagamento(Long restauranteId, Long formaPagamentoId){
+    public void removerFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante entity = buscarOuFalhar(restauranteId);
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
 
@@ -121,11 +124,19 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void adicionarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+    public void adicionarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante entity = buscarOuFalhar(restauranteId);
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
 
         entity.getFormaPagamento().add(formaPagamento);
+
+    // ===============================
+        // @Transactional
+        // public void adicionarProduto(Long restaurantId, ProdutoInput inputProduto){
+        //
+        // }
+
+    // ===============================
 
     }
 }
