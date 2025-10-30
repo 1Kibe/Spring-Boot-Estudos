@@ -6,7 +6,7 @@ create table item_pedido
 primary key (id)) engine=InnoDB;
 
 create table pedido 
-(id bigint not null auto_increment, data_cancelamento datetime(6), data_confirmacao datetime(6), data_criacao datetime(6) not null, data_entrega datetime(6), endereco_bairo varchar(255), endereco_cep varchar(255), endereco_complemento varchar(255), endereco_logradouro varchar(255), endereco_numero varchar(255), status_pedido enum ('CANCELADO','CONFIRMADO','CRIADO','ENTREGUE'), sub_total decimal(38,2) not null, taxa_frete decimal(38,2) not null, valor_total decimal(38,2) not null, endereco_cidade_id bigint, restaurante_id bigint, 
+(id bigint not null auto_increment, data_cancelamento TIMESTAMP(6), data_confirmacao TIMESTAMP(6), data_criacao TIMESTAMP(6) not null, data_entrega TIMESTAMP(6), endereco_bairo varchar(255), endereco_cep varchar(255), endereco_complemento varchar(255), endereco_logradouro varchar(255), endereco_numero varchar(255), status_pedido enum ('CANCELADO','CONFIRMADO','CRIADO','ENTREGUE'), sub_total decimal(38,2) not null, taxa_frete decimal(38,2) not null, valor_total decimal(38,2) not null, endereco_cidade_id bigint, restaurante_id bigint, 
 primary key (id)) engine=InnoDB;
 
 alter table produto 

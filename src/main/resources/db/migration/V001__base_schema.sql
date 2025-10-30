@@ -37,8 +37,8 @@ CREATE TABLE `permissao` (
 CREATE TABLE `restaurante` (
   `taxa_frete` decimal(38,2) DEFAULT NULL,
   `cozinha_id` bigint(20) DEFAULT NULL,
-  `data_atualizacao` datetime(6) NOT NULL,
-  `data_criacao` datetime(6) NOT NULL,
+  `data_atualizacao` TIMESTAMP(6) NOT NULL,
+  `data_criacao` TIMESTAMP(6) NOT NULL,
   `endereco_cidade_id` bigint(20) DEFAULT NULL,
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `endereco_bairo` varchar(255) DEFAULT NULL,
