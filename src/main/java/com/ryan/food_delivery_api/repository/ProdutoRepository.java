@@ -17,7 +17,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     // realmente pertença ao restaurante informado. Essa query JPQL evita acesso
     // incorreto
     // a produtos de outros restaurantes.
-    @Query("from Produto where restaurente.id = :restaurante and id = :produto")
+    @Query("from Produto where restaurante.id = :restaurante and id = :produto")
     Optional<Produto> findById(@Param("restaurante") Long id, @Param("produto") Long atributoid);
 
     List<Produto> findByRestaurante(Restaurante restaurante);

@@ -76,7 +76,7 @@ public class ProdutosResource {
     // banco.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoDto salvar(@PathVariable Long idR, @PathVariable Long idP,
+    public ProdutoDto salvar(@PathVariable Long idR,
             @RequestBody @Valid ProdutoInputDto input) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(idR);
         Produto produto = disassembler.toDomainObject(input);
@@ -95,6 +95,8 @@ public class ProdutosResource {
         Produto produtoAtual = service.buscarOuFalhar(idR, idP);
 
         disassembler.copyToDomainObject(input, produtoAtual);
+
+        produtoAtual = service.salvar(produtoAtual);
 
         return assembler.toModel(produtoAtual);
     }

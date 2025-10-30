@@ -115,6 +115,21 @@ public class RestauranteService {
     // ===============================
 
     @Transactional
+    public void abertura(Long id){
+        Restaurante entityAtual = buscarOuFalhar(id);
+        entityAtual.abrir();
+    }
+
+    @Transactional
+    public void fechamento(Long id){
+        Restaurante entityAtual = buscarOuFalhar(id);
+        entityAtual.fechar();
+    }
+
+    // ===============================
+
+
+    @Transactional
     public void removerFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante entity = buscarOuFalhar(restauranteId);
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);

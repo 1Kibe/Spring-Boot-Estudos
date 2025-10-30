@@ -3,6 +3,7 @@ package com.ryan.food_delivery_api.domain.dto.produto;
 import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,6 @@ public class ProdutoInputDto {
     @NotBlank
     private String descricao;
 
-    @NotBlank
+    @NotNull
     private BigDecimal preco;
 }

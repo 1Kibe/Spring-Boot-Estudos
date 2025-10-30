@@ -127,6 +127,20 @@ public class RestauranteResource {
     }
 
     // ============================================
+    
+    @PutMapping("/{id}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrirRestaurante(@PathVariable Long id){
+        service.abertura(id);
+    }
+
+    @PutMapping("/{id}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fecharRestaurante(@PathVariable Long id){
+        service.fechamento(id);
+    }
+    // ============================================
+
 
     // @PatchMapping("/{id}")
     // public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody

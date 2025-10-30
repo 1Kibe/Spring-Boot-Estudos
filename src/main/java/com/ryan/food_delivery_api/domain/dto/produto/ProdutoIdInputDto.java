@@ -1,12 +1,12 @@
 package com.ryan.food_delivery_api.domain.dto.produto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class ProdutoIdInputDto {
-    @NotBlank
+    @NotNull
     private Long id;
 }
