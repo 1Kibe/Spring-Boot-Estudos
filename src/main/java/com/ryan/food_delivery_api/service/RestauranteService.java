@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ryan.food_delivery_api.domain.Cidade;
 import com.ryan.food_delivery_api.domain.Cozinha;
+import com.ryan.food_delivery_api.domain.FormaPagamento;
 import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.restaurante.RestauranteEmUsoException;
@@ -23,11 +24,18 @@ public class RestauranteService {
     @Autowired
     private RestauranteRepository repository;
 
+    // ===
+
     @Autowired
     private CozinhaService cozinhaService;
 
     @Autowired
     private CidadeService cidadeService;
+
+    @Autowired
+    private FormaPagamentoService formaPagamentoService;
+
+    // ===
 
     public RestauranteService(RestauranteRepository repository) {
         this.repository = repository;
@@ -101,5 +109,23 @@ public class RestauranteService {
     public void desativar(Long id) {
         Restaurante entityAtual = buscarOuFalhar(id);
         entityAtual.desativar();
+    }
+
+    @Transactional
+    public void removerFormaPagamento(Long restauranteId, Long formaPagamentoId){
+        Restaurante entity = buscarOuFalhar(restauranteId);
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        entity.getFormaPagamento().remove(formaPagamento);
+
+    }
+
+    @Transactional
+    public void adicionarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+        Restaurante entity = buscarOuFalhar(restauranteId);
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        entity.getFormaPagamento().add(formaPagamento);
+
     }
 }

@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Restaurante;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.formaPagamento.FormaPagamentoDtoAssembler;
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.restaurante.RestauranteDtoAssembler;
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.restaurante.RestauranteDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.formaPagamento.FormaPagamentoDto;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteDto;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteInputDto;
 import com.ryan.food_delivery_api.exception.NegocioException;
@@ -36,6 +38,9 @@ public class RestauranteResource {
 
     @Autowired
     private RestauranteDtoDisassembler restauranteDtoDisassembler;
+
+    @Autowired
+    private FormaPagamentoDtoAssembler formaPagamentoDtoAssembler;
 
     public RestauranteResource(RestauranteService service) {
         this.service = service;
@@ -72,7 +77,7 @@ public class RestauranteResource {
 
             // Com ModelMapper
             restauranteDtoDisassembler.copyToDomainObject(input, entidadeAtual);
- 
+
             // Com BeanUtils
             // Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(input);
             // BeanUtils.copyProperties(restaurante, entidadeAtual,
@@ -90,21 +95,40 @@ public class RestauranteResource {
         service.deletar(id);
     }
 
-    //Sub Rotas
-
+    // Sub Rotas
 
     @PutMapping("/{id}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativar(@PathVariable Long id){
+    public void ativar(@PathVariable Long id) {
         service.ativar(id);
     }
 
     @DeleteMapping("/{id}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desativar(@PathVariable Long id){
+    public void desativar(@PathVariable Long id) {
         service.desativar(id);
     }
 
+    // ======
+
+    @GetMapping("/{id}/forma-de-pagamento")
+    public List<FormaPagamentoDto> listarFormasPagamentos(@PathVariable Long id) {
+        Restaurante entity = service.buscarOuFalhar(id);
+
+        return formaPagamentoDtoAssembler.toCollectionModel(entity.getFormaPagamento());
+    }
+
+    @DeleteMapping("/{id}/forma-de-pagamento/{id2}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removerFormasPagamentos(@PathVariable Long id, @PathVariable Long id2) {
+        service.removerFormaPagamento(id, id2);
+    }
+
+    @PutMapping("/{id}/forma-de-pagamento/{id2}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void adicionarFormasPagamentos(@PathVariable Long id, @PathVariable Long id2) {
+        service.adicionarFormaPagamento(id, id2);
+    }
 
     // @PatchMapping("/{id}")
     // public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody

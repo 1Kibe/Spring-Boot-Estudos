@@ -1,5 +1,6 @@
 package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.formaPagamento;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class FormaPagamentoDtoAssembler {
         return modelMapper.map(entity, FormaPagamentoDto.class);
     }
 
-    public List<FormaPagamentoDto> toCollectionModel(List<FormaPagamento> entityS) {
+    public List<FormaPagamentoDto> toCollectionModel(Collection<FormaPagamento> entityS) {
         return entityS.stream()
                 .map(formaPagamento -> toModel(formaPagamento))
                 .collect(Collectors.toList());

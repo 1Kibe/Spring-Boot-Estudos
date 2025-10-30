@@ -9,5 +9,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByEmail(String email);
 
-    void detach(Usuario entity);
+    //void detach(Usuario entity); // funciona em metodos Custom repository
 }

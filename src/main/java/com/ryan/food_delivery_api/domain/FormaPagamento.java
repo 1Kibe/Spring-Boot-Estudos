@@ -6,10 +6,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Data
 public class FormaPagamento {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;

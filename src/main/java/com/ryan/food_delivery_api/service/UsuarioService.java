@@ -14,6 +14,7 @@ import com.ryan.food_delivery_api.exception.usuario.UsuarioEmUsoException;
 import com.ryan.food_delivery_api.exception.usuario.UsuarioNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.UsuarioRepository;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -21,6 +22,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private EntityManager manager;
 
     @Transactional
     public List<Usuario> listar() {
@@ -43,7 +47,7 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario entity) {
-        repository.detach(entity);// Garante que o JPA não está gerenciando essa entidade (limpa o cache local)
+        manager.detach(entity);// Garante que o JPA não está gerenciando essa entidade (limpa o cache local)
 
         Optional<Usuario> usuarioExistente = repository.findByEmail(entity.getEmail());
 

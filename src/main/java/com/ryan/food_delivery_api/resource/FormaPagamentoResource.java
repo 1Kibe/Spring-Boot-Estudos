@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/formas_de_pagamentos")
+@RequestMapping("/formas-de-pagamento")
 public class FormaPagamentoResource {
 
     @Autowired
