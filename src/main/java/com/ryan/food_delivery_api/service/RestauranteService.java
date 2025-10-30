@@ -131,12 +131,6 @@ public class RestauranteService {
         entity.getFormaPagamento().add(formaPagamento);
 
     // ===============================
-        // @Transactional
-        // public void adicionarProduto(Long restaurantId, ProdutoInput inputProduto){
-        //
-        // }
-
-    // ===============================
 
     }
 }

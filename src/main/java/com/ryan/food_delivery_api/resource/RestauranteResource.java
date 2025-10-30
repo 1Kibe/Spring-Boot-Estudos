@@ -34,36 +34,32 @@ public class RestauranteResource {
     private RestauranteService service;
 
     @Autowired
-    private RestauranteDtoAssembler restauranteDtoAssembler;
+    private RestauranteDtoAssembler assembler;
 
     @Autowired
-    private RestauranteDtoDisassembler restauranteDtoDisassembler;
+    private RestauranteDtoDisassembler disassembler;
 
     @Autowired
     private FormaPagamentoDtoAssembler formaPagamentoDtoAssembler;
 
-    public RestauranteResource(RestauranteService service) {
-        this.service = service;
-    }
-
     @GetMapping()
     public List<RestauranteDto> listar() {
-        return restauranteDtoAssembler.toCollectionModel(service.listar());
+        return assembler.toCollectionModel(service.listar());
     }
 
     @GetMapping("/{id}")
     public RestauranteDto findById(@PathVariable Long id) {
         Restaurante obj = service.buscarOuFalhar(id);
-        return restauranteDtoAssembler.toModel(obj);
+        return assembler.toModel(obj);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteDto salvar(@RequestBody RestauranteInputDto obj) {
         try {
-            Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(obj);
+            Restaurante restaurante = disassembler.toDomainObject(obj);
 
-            return restauranteDtoAssembler.toModel(restaurante);
+            return assembler.toModel(restaurante);
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -76,14 +72,14 @@ public class RestauranteResource {
             Restaurante entidadeAtual = service.buscarOuFalhar(id);
 
             // Com ModelMapper
-            restauranteDtoDisassembler.copyToDomainObject(input, entidadeAtual);
+            disassembler.copyToDomainObject(input, entidadeAtual);
 
             // Com BeanUtils
-            // Restaurante restaurante = restauranteDtoDisassembler.toDomainObject(input);
+            // Restaurante restaurante = disassembler.toDomainObject(input);
             // BeanUtils.copyProperties(restaurante, entidadeAtual,
             // "id", "formasPagameto", "endereco", "dataCriacao", "dataAtualizacao");
 
-            return restauranteDtoAssembler.toModel(service.salvar(entidadeAtual));
+            return assembler.toModel(service.salvar(entidadeAtual));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -109,7 +105,7 @@ public class RestauranteResource {
         service.desativar(id);
     }
 
-    // ======
+    // ============================================
 
     @GetMapping("/{id}/forma-de-pagamento")
     public List<FormaPagamentoDto> listarFormasPagamentos(@PathVariable Long id) {
@@ -129,6 +125,8 @@ public class RestauranteResource {
     public void adicionarFormasPagamentos(@PathVariable Long id, @PathVariable Long id2) {
         service.adicionarFormaPagamento(id, id2);
     }
+
+    // ============================================
 
     // @PatchMapping("/{id}")
     // public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody
