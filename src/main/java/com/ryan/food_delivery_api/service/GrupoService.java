@@ -7,42 +7,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.ryan.food_delivery_api.domain.Pedido;
+import com.ryan.food_delivery_api.domain.Grupo;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
-import com.ryan.food_delivery_api.exception.pedido.PedidoEmUsoException;
-import com.ryan.food_delivery_api.exception.pedido.PedidoNaoEncontradoException;
-import com.ryan.food_delivery_api.repository.PedidoRepository;
+import com.ryan.food_delivery_api.exception.grupo.GrupoEmUsoException;
+import com.ryan.food_delivery_api.exception.grupo.GrupoNaoEncontradoException;
+import com.ryan.food_delivery_api.repository.GrupoRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
-public class PedidoService {
+public class GrupoService {
 
     @Autowired
-    private PedidoRepository repository;
-
+    private GrupoRepository repository;
 
     @Transactional
-    public List<Pedido> listar() {
+    public List<Grupo> listar() {
         return repository.findAll();
     }
 
     @Transactional
-    public Optional<Pedido> buscar(Long id) {
+    public Optional<Grupo> buscar(Long id) {
 
         return repository.findById(id);
 
     }
 
     @Transactional
-    public Pedido buscarOuFalhar(Long id) {
+    public Grupo buscarOuFalhar(Long id) {
         // ResponseStatus
         return repository.findById(id)
-                .orElseThrow(() -> new PedidoNaoEncontradoException(id));
+                .orElseThrow(() -> new GrupoNaoEncontradoException(id));
     }
 
     @Transactional
-    public Pedido salvar(Pedido obj) {
+    public Grupo salvar(Grupo obj) {
 
         return repository.save(obj);
     }
@@ -53,10 +52,10 @@ public class PedidoService {
             repository.deleteById(id);
             repository.flush();// para tratar erro de lancar exception depois do metodo
         } catch (EntidadeNaoEncontradaException e) {
-            throw new PedidoNaoEncontradoException(id);
+            throw new GrupoNaoEncontradoException(id);
         } catch (DataIntegrityViolationException e) {
-            throw new  PedidoEmUsoException(id,
-                    Pedido.class);
+            throw new  GrupoEmUsoException(id,
+                    Grupo.class);
         }
     }
 
@@ -64,15 +63,17 @@ public class PedidoService {
 
     //@Transactional
     //public void ativar(Long id) {
-    //    Pedido entityAtual = buscarOuFalhar(id);
+    //    Grupo entityAtual = buscarOuFalhar(id);
     //    entityAtual.ativar();
     //}
 //
     //@Transactional
     //public void desativar(Long id) {
-    //    Pedido entityAtual = buscarOuFalhar(id);
+    //    Grupo entityAtual = buscarOuFalhar(id);
     //    entityAtual.desativar();
     //}
 
 }
+
+
 

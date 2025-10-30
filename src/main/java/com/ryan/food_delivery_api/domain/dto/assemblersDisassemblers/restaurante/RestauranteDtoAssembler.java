@@ -12,6 +12,21 @@ import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteDto;
 
 @Component
 public class RestauranteDtoAssembler {
+    /**
+     * Responsável por converter entidades de domínio {@link Restaurante}
+     * em representações de saída {@link RestauranteDto}.
+     * 
+     * Essa classe centraliza a lógica de conversão, utilizando o
+     * {@link ModelMapper}
+     * para automatizar o mapeamento de propriedades entre as classes.
+     * 
+     * Dessa forma, a API nunca expõe diretamente as entidades JPA,
+     * mantendo o isolamento entre o domínio e a camada de apresentação (DTOs).
+     *
+     * Métodos principais:
+     * - {@code toModel}: converte uma única entidade em DTO.
+     * - {@code toCollectionModel}: converte listas de entidades em listas de DTOs.
+     */
 
     @Autowired
     private ModelMapper modelMapper;
