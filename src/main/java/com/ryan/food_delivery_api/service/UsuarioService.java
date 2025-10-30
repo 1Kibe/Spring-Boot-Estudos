@@ -42,9 +42,19 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario salvar(Usuario obj) {
+    public Usuario salvar(Usuario entity) {
+        repository.detach(entity);// Garante que o JPA não está gerenciando essa entidade (limpa o cache local)
 
-        return repository.save(obj);
+        Optional<Usuario> usuarioExistente = repository.findByEmail(entity.getEmail());
+
+        // verifica se ja existe um email cadastrado e se o email passado é diferente do
+        // que esta armazenado
+        if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(entity)) {
+            throw new NegocioException(
+                    String.format("Já existe um usuário cadastrado com esse e-mail %s", entity.getEmail()));
+        }
+
+        return repository.save(entity);
     }
 
     @Transactional
@@ -61,16 +71,16 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void alterarSenha(Long id, String senhaAtual, String novaSenha){
+    public void alterarSenha(Long id, String senhaAtual, String novaSenha) {
         Usuario entity = buscarOuFalhar(id);
 
-        if(entity.senhaNaoCoincide(senhaAtual)){
+        if (entity.senhaNaoCoincide(senhaAtual)) {
             throw new NegocioException("Senha atual informada não coincide com a senha do usuario.");
         }
 
         entity.setSenha(novaSenha);
     }
 
-    //Obj alterado fora da Transacional
-    
+    // Obj alterado fora da Transacional
+
 }
