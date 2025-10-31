@@ -171,7 +171,7 @@ public class RestauranteResource {
         usuarioService.desvincularResponsavel(id, idR);
     }
     // ============================================
-
+ 
     // @PatchMapping("/{id}")
     // public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody
     // Map<String, Object> campos,
