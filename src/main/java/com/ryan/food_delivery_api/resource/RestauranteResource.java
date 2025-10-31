@@ -105,7 +105,7 @@ public class RestauranteResource {
         service.deletar(id);
     }
 
-    // Sub Rotas
+    // ============================================
 
     @PutMapping("/{id}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
