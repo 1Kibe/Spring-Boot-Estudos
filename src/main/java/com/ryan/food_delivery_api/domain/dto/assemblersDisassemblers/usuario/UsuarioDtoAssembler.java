@@ -1,5 +1,6 @@
 package com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.usuario;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class UsuarioDtoAssembler {
         return modelMapper.map(entity, UsuarioDto.class);
     }
 
-    public List<UsuarioDto> toCollectionModel(List<Usuario> entitys) {
+    public List<UsuarioDto> toCollectionModel(Collection<Usuario> entitys) {
         return entitys.stream()
                 .map(restaurante -> toModel(restaurante))
                 .collect(Collectors.toList());

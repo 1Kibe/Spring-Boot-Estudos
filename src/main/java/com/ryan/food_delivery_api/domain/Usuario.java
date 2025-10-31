@@ -38,6 +38,7 @@ public class Usuario {
     private List<Grupo> grupos = new ArrayList<>();
 
 
+    // ===
 
     public boolean senhaCoincide(String senha){
         return getSenha().equals(senha);
@@ -46,4 +47,7 @@ public class Usuario {
      public boolean senhaNaoCoincide(String senha){
         return !senhaCoincide(senha);
     }
+
+    // ===
+
 }

@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.ryan.food_delivery_api.domain.Grupo;
+import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.domain.Usuario;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.NegocioException;
@@ -26,6 +28,16 @@ public class UsuarioService {
 
     @Autowired
     private EntityManager manager;
+
+    // ===
+
+    @Autowired
+    private GrupoService grupoService;
+
+    @Autowired
+    private RestauranteService restauranteService;
+
+    // ===
 
     @Transactional
     public List<Usuario> listar() {
@@ -92,16 +104,37 @@ public class UsuarioService {
 
     @Transactional
     public void vincularGrupo(@PathVariable Long id, @PathVariable Long idG) {
+        Usuario usuario = buscarOuFalhar(id);
+        Grupo grupo = grupoService.buscarOuFalhar(idG);
 
+        usuario.getGrupos().add(grupo);
     }
 
     @Transactional
     public void desvincularGrupo(@PathVariable Long id, @PathVariable Long idG) {
+        Usuario usuario = buscarOuFalhar(id);
+        Grupo grupo = grupoService.buscarOuFalhar(idG);
 
+        usuario.getGrupos().remove(grupo);
     }
 
     // ====================================
 
-    // Obj alterado fora da Transacional
+    @Transactional
+    public void vincularResponsavel(@PathVariable Long id, @PathVariable Long idU) {
+        Restaurante restaurante = restauranteService.buscarOuFalhar(idU);
+        Usuario usuario = buscarOuFalhar(idU);
+
+        restaurante.getResponsaveis().add(usuario);
+    }
+
+    @Transactional
+    public void desvincularResponsavel(@PathVariable Long id, @PathVariable Long idU) {
+        Restaurante restaurante = restauranteService.buscarOuFalhar(idU);
+        Usuario usuario = buscarOuFalhar(idU);
+
+        restaurante.getResponsaveis().remove(usuario);
+    }
+    // ====================================
 
 }

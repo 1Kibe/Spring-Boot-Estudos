@@ -76,6 +76,14 @@ public class Restaurante {
     // e evitar problemas ao atualizar (PUT) a entidade.
     private Set<FormaPagamento> formaPagamento = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+        name = "restaurante_usuario_responsavel",
+        joinColumns = @JoinColumn(name = "restaurante_id"),
+        inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    private Set<Usuario> responsaveis = new HashSet<>();
+
     @CreationTimestamp
     @Column(nullable = false)
     private OffsetDateTime dataCriacao;
@@ -83,6 +91,8 @@ public class Restaurante {
     @UpdateTimestamp
     @Column(nullable = false)
     private OffsetDateTime dataAtualizacao;
+
+    // ===
 
     public void ativar() {
         setAtivo(true);
@@ -100,4 +110,5 @@ public class Restaurante {
         setAberto(false);
     }
 
+    // ===
 }
