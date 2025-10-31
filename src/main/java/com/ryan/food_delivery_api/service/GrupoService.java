@@ -6,8 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ryan.food_delivery_api.domain.Grupo;
+import com.ryan.food_delivery_api.domain.Permissao;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.grupo.GrupoEmUsoException;
 import com.ryan.food_delivery_api.exception.grupo.GrupoNaoEncontradoException;
@@ -20,6 +22,13 @@ public class GrupoService {
 
     @Autowired
     private GrupoRepository repository;
+
+    // ===
+
+    @Autowired
+    private PermissaoService permissaoService;
+
+    // ===
 
     @Transactional
     public List<Grupo> listar() {
@@ -54,26 +63,42 @@ public class GrupoService {
         } catch (EntidadeNaoEncontradaException e) {
             throw new GrupoNaoEncontradoException(id);
         } catch (DataIntegrityViolationException e) {
-            throw new  GrupoEmUsoException(id,
+            throw new GrupoEmUsoException(id,
                     Grupo.class);
         }
     }
 
+    // ===========================================
+
+    @Transactional
+    public void adcionarPermissoes(@PathVariable Long id,@PathVariable Long idP) {
+        Grupo grupo = buscarOuFalhar(id);
+        Permissao permissao = permissaoService.buscarOuFalhar(idP);
+
+        grupo.getPermissoes().add(permissao);
+    }
+
+    @Transactional
+    public void removerPermissoes(@PathVariable Long id,@PathVariable Long idP) {
+        Grupo grupo = buscarOuFalhar(id);
+        Permissao permissao = permissaoService.buscarOuFalhar(idP);
+
+        grupo.getPermissoes().remove(permissao);
+    }
+    // ===========================================
+
     // Sub Rotas
 
-    //@Transactional
-    //public void ativar(Long id) {
-    //    Grupo entityAtual = buscarOuFalhar(id);
-    //    entityAtual.ativar();
-    //}
-//
-    //@Transactional
-    //public void desativar(Long id) {
-    //    Grupo entityAtual = buscarOuFalhar(id);
-    //    entityAtual.desativar();
-    //}
+    // @Transactional
+    // public void ativar(Long id) {
+    // Grupo entityAtual = buscarOuFalhar(id);
+    // entityAtual.ativar();
+    // }
+    //
+    // @Transactional
+    // public void desativar(Long id) {
+    // Grupo entityAtual = buscarOuFalhar(id);
+    // entityAtual.desativar();
+    // }
 
 }
-
-
-
