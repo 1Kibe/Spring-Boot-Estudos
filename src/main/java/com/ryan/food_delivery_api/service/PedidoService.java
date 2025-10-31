@@ -1,15 +1,15 @@
 package com.ryan.food_delivery_api.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.ryan.food_delivery_api.domain.Cidade;
+import com.ryan.food_delivery_api.domain.FormaPagamento;
 import com.ryan.food_delivery_api.domain.Pedido;
-import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
-import com.ryan.food_delivery_api.exception.pedido.PedidoEmUsoException;
+import com.ryan.food_delivery_api.domain.Produto;
+import com.ryan.food_delivery_api.domain.Restaurante;
+import com.ryan.food_delivery_api.domain.Usuario;
+import com.ryan.food_delivery_api.exception.NegocioException;
 import com.ryan.food_delivery_api.exception.pedido.PedidoNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.PedidoRepository;
 
@@ -21,18 +21,24 @@ public class PedidoService {
     @Autowired
     private PedidoRepository repository;
 
+    // ===
 
-    @Transactional
-    public List<Pedido> listar() {
-        return repository.findAll();
-    }
+    @Autowired
+    private RestauranteService restauranteService;
 
-    @Transactional
-    public Optional<Pedido> buscar(Long id) {
+    @Autowired
+    private FormaPagamentoService formaPagamentoService;
 
-        return repository.findById(id);
+    @Autowired
+    private CidadeService cidadeService;
 
-    }
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private ProdutoService produtoService;
+
+    // ===
 
     @Transactional
     public Pedido buscarOuFalhar(Long id) {
@@ -41,38 +47,62 @@ public class PedidoService {
                 .orElseThrow(() -> new PedidoNaoEncontradoException(id));
     }
 
-    @Transactional
-    public Pedido salvar(Pedido obj) {
-
-        return repository.save(obj);
+    public Produto buscarOuFalhar(Long restauranteId, Long produtoId) {
+        return produtoService.buscarOuFalhar(restauranteId, produtoId);
     }
 
     @Transactional
-    public void deletar(Long id) {
-        try {
-            repository.deleteById(id);
-            repository.flush();// para tratar erro de lancar exception depois do metodo
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new PedidoNaoEncontradoException(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new  PedidoEmUsoException(id,
-                    Pedido.class);
+    public Pedido emitir(Pedido pedido) {
+        validarPedido(pedido);
+        validarItens(pedido);
+
+        pedido.setTaxaFrete(pedido.getRestaurante().getTaxaFrete());
+        pedido.calcularValorTotal();
+
+        return repository.save(pedido);
+    }
+
+    private void validarPedido(Pedido pedido) {
+        Cidade cidade = cidadeService.buscarOuFalhar(pedido.getEndereco().getCidade().getId());
+        Usuario cliente = usuarioService.buscarOuFalhar(pedido.getCliente().getId());
+        Restaurante restaurante = restauranteService.buscarOuFalhar(pedido.getRestaurante().getId());
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(pedido.getFormaPagamento().getId());
+
+        pedido.getEndereco().setCidade(cidade);
+        pedido.setCliente(cliente);
+        pedido.setRestaurante(restaurante);
+        pedido.setFormaPagamento(formaPagamento);
+
+        if (restaurante.naoAceitarFormaPagamento(formaPagamento)) {
+            throw new NegocioException(String.format("Forma de pagamento '%s' não é aceita por esse restaurante.",
+                    formaPagamento.getDescricao()));
         }
+    }
+
+
+    private void validarItens(Pedido pedido) {
+        pedido.getItensPedidos().forEach(item -> {
+            Produto produto = produtoService.buscarOuFalhar(
+                    pedido.getRestaurante().getId(), item.getProduto().getId());
+
+            item.setPedido(pedido);
+            item.setProduto(produto);
+            item.setPrecoUnitario(produto.getPreco());
+        });
     }
 
     // Sub Rotas
 
-    //@Transactional
-    //public void ativar(Long id) {
-    //    Pedido entityAtual = buscarOuFalhar(id);
-    //    entityAtual.ativar();
-    //}
-//
-    //@Transactional
-    //public void desativar(Long id) {
-    //    Pedido entityAtual = buscarOuFalhar(id);
-    //    entityAtual.desativar();
-    //}
+    // @Transactional
+    // public void ativar(Long id) {
+    // Pedido entityAtual = buscarOuFalhar(id);
+    // entityAtual.ativar();
+    // }
+    //
+    // @Transactional
+    // public void desativar(Long id) {
+    // Pedido entityAtual = buscarOuFalhar(id);
+    // entityAtual.desativar();
+    // }
 
 }
-

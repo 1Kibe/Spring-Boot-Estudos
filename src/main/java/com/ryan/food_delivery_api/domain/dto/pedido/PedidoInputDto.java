@@ -1,15 +1,15 @@
 package com.ryan.food_delivery_api.domain.dto.pedido;
 
-import java.math.BigDecimal;
+import java.util.List;
 
-import com.ryan.food_delivery_api.domain.StatusPedido;
-import com.ryan.food_delivery_api.domain.dto.endereco.EnderecoDto;
-import com.ryan.food_delivery_api.domain.dto.formaPagamento.FormaPagamentoDto;
-import com.ryan.food_delivery_api.domain.dto.itemPedido.ItemPedidoDto;
-import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteResunDto;
+import com.ryan.food_delivery_api.domain.dto.endereco.EnderecoInputDto;
+import com.ryan.food_delivery_api.domain.dto.formaPagamento.FormaPagamentoIdInputDto;
+import com.ryan.food_delivery_api.domain.dto.itemPedido.ItemPedidoInputDto;
+import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteIdInputDto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,26 +18,20 @@ import lombok.Setter;
 public class PedidoInputDto {
 
     @NotNull
-    private BigDecimal subTotal;
+    @Valid
+    private EnderecoInputDto endereco;
 
     @NotNull
-    private BigDecimal taxaFrete;
+    @Valid
+    private FormaPagamentoIdInputDto formaPagamento;
 
     @NotNull
-    private BigDecimal valorTotal;
+    @Valid
+    private RestauranteIdInputDto restaurante;
 
     @NotNull
-    private EnderecoDto endereco;
+    @Size(min = 1)
+    @Valid
+    private List<ItemPedidoInputDto> itensPedido;
 
-    @NotBlank
-    private StatusPedido statusPedido;
-
-    @NotNull
-    private FormaPagamentoDto formaPagamento;
-
-    @NotNull
-    private ItemPedidoDto itensPedido;
-
-    @NotNull
-    private RestauranteResunDto restaurante;
 }

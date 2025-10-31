@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -57,17 +58,21 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private StatusPedido statusPedido = StatusPedido.CRIADO;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
-    private List<FormaPagamento> formaPagamentos = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private FormaPagamento formaPagamento;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itensPedidos = new ArrayList<>();
 
     @ManyToOne
     private Restaurante restaurante;
 
+
     // ===
     public void calcularValorTotal(){
+        getItensPedidos().forEach(ItemPedido::calcularPrecoTotal);
+
         this.subTotal = getItensPedidos().stream()
         .map(itensPedidos -> itensPedidos.getPrecoTotal())
         .reduce(BigDecimal.ZERO, BigDecimal::add);
