@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ryan.food_delivery_api.domain.Usuario;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.grupo.GrupoDtoAssembler;
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.usuario.UsuarioDtoAssembler;
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.usuario.UsuarioDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.grupo.GrupoDto;
 import com.ryan.food_delivery_api.domain.dto.usuario.SenhaInput;
 import com.ryan.food_delivery_api.domain.dto.usuario.UsuarioComSenhaInputDto;
 import com.ryan.food_delivery_api.domain.dto.usuario.UsuarioDto;
@@ -35,6 +38,13 @@ public class UsuarioResource {
 
     @Autowired
     private UsuarioDtoDisassembler disassembler;
+
+    // ===
+
+    @Autowired
+    private GrupoDtoAssembler grupoDtoAssembler;
+
+    // ===
 
     public UsuarioResource(UsuarioService service) {
         this.service = service;
@@ -72,5 +82,29 @@ public class UsuarioResource {
     public void alterarSenha(@PathVariable Long id, @RequestBody @Valid SenhaInput input) {
         service.alterarSenha(id, input.getSenhaAtual(), input.getNovaSenha());
     }
+
+    // ===========================================
+
+    // get usuarios/id/grupos
+    @GetMapping("j")
+    public List<GrupoDto> listarGrupos(@PathVariable Long id) {
+        Usuario usuario = service.buscarOuFalhar(id);
+        return grupoDtoAssembler.toCollectionModel(usuario.getGrupos());
+    }
+
+    // put usuarios/id/grupos/idG
+    @PutMapping("/{id}/grupos/{idG}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void vincularGrupo(@PathVariable Long id, @PathVariable Long idG) {
+        service.vincularGrupo(id, idG);
+    }
+
+    // delete usuarios/id/grupos/idG
+    @DeleteMapping("/{id}/grupos/{idG}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void desvincularGrupo(@PathVariable Long id, @PathVariable Long idG) {
+        service.desvincularGrupo(id, idG);
+    }
+    // ===========================================
 
 }

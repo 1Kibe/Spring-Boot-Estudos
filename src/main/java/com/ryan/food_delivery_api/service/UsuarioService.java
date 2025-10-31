@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ryan.food_delivery_api.domain.Usuario;
 import com.ryan.food_delivery_api.exception.EntidadeNaoEncontradaException;
@@ -74,6 +75,8 @@ public class UsuarioService {
         }
     }
 
+    // ====================================
+
     @Transactional
     public void alterarSenha(Long id, String senhaAtual, String novaSenha) {
         Usuario entity = buscarOuFalhar(id);
@@ -84,6 +87,20 @@ public class UsuarioService {
 
         entity.setSenha(novaSenha);
     }
+
+    // ====================================
+
+    @Transactional
+    public void vincularGrupo(@PathVariable Long id, @PathVariable Long idG) {
+
+    }
+
+    @Transactional
+    public void desvincularGrupo(@PathVariable Long id, @PathVariable Long idG) {
+
+    }
+
+    // ====================================
 
     // Obj alterado fora da Transacional
 
