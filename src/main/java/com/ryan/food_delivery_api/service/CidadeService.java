@@ -18,7 +18,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class CidadeService {
- 
+
     @Autowired
     private CidadeRepository repository;
 
