@@ -18,13 +18,15 @@ import com.ryan.food_delivery_api.domain.Restaurante;
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.formaPagamento.FormaPagamentoDtoAssembler;
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.restaurante.RestauranteDtoAssembler;
 import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.restaurante.RestauranteDtoDisassembler;
-import com.ryan.food_delivery_api.domain.dto.formaPagamento.FormaPagamentoDto;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.usuario.UsuarioDtoAssembler;import com.ryan.food_delivery_api.domain.dto.formaPagamento.FormaPagamentoDto;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteDto;
 import com.ryan.food_delivery_api.domain.dto.restaurante.RestauranteInputDto;
+import com.ryan.food_delivery_api.domain.dto.usuario.UsuarioDto;
 import com.ryan.food_delivery_api.exception.NegocioException;
 import com.ryan.food_delivery_api.exception.cidade.CidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.cozinha.CozinhaNaoEncontradaException;
 import com.ryan.food_delivery_api.service.RestauranteService;
+import com.ryan.food_delivery_api.service.UsuarioService;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -39,8 +41,20 @@ public class RestauranteResource {
     @Autowired
     private RestauranteDtoDisassembler disassembler;
 
+    // ===
+
     @Autowired
     private FormaPagamentoDtoAssembler formaPagamentoDtoAssembler;
+
+    @Autowired
+    private UsuarioDtoAssembler usuarioDtoAssembler;
+
+    // ++++
+    @Autowired
+    private UsuarioService usuarioService;
+    // ++++
+
+    // ===
 
     @GetMapping()
     public List<RestauranteDto> listar() {
@@ -127,20 +141,36 @@ public class RestauranteResource {
     }
 
     // ============================================
-    
+
     @PutMapping("/{id}/abertura")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void abrirRestaurante(@PathVariable Long id){
+    public void abrirRestaurante(@PathVariable Long id) {
         service.abertura(id);
     }
 
     @PutMapping("/{id}/fechamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void fecharRestaurante(@PathVariable Long id){
+    public void fecharRestaurante(@PathVariable Long id) {
         service.fechamento(id);
     }
     // ============================================
 
+    @GetMapping("/{id}/responsaveis")
+    public List<UsuarioDto> listarReponsavel(@PathVariable Long id){
+        Restaurante restaurante = service.buscarOuFalhar(id);
+        return usuarioDtoAssembler.toCollectionModel(restaurante.getResponsaveis());
+    }
+
+    @PutMapping("/{id}/responsaveis/{idR}")
+    public void vincularResponsavel(@PathVariable Long id, @PathVariable Long idR) {
+        usuarioService.vincularResponsavel(id, idR);
+    }
+
+    @DeleteMapping("/{id}/responsaveis/{idR}")
+    public void desvincularResponsavel(@PathVariable Long id, @PathVariable Long idR) {
+        usuarioService.desvincularResponsavel(id, idR);
+    }
+    // ============================================
 
     // @PatchMapping("/{id}")
     // public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody

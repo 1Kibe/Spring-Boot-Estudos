@@ -77,11 +77,7 @@ public class Restaurante {
     private Set<FormaPagamento> formaPagamento = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(
-        name = "restaurante_usuario_responsavel",
-        joinColumns = @JoinColumn(name = "restaurante_id"),
-        inverseJoinColumns = @JoinColumn(name = "usuario_id")
-    )
+    @JoinTable(name = "restaurante_usuario_responsavel", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "usuario_id"))
     private Set<Usuario> responsaveis = new HashSet<>();
 
     @CreationTimestamp
@@ -106,8 +102,16 @@ public class Restaurante {
         setAberto(true);
     }
 
-    public void fechar(){
+    public void fechar() {
         setAberto(false);
+    }
+
+    public boolean removerResponsavel(Usuario usuario) {
+        return getResponsaveis().remove(usuario);
+    }
+
+    public boolean adicionarResponsavel(Usuario usuario) {
+        return getResponsaveis().add(usuario);
     }
 
     // ===
