@@ -1,4 +1,4 @@
-package com.ryan.food_delivery_api.domain.dto.pedido;
+package com.ryan.food_delivery_api.domain.dto.endereco;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -6,9 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PedidoIdInputDto {
-
+public class EnderecoIdInputDto {
     @NotNull
     private Long id;
-
 }

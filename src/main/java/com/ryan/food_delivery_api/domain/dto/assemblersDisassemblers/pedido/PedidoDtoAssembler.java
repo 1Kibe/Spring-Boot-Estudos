@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.ryan.food_delivery_api.domain.Pedido;
 import com.ryan.food_delivery_api.domain.dto.pedido.PedidoDto;
+import com.ryan.food_delivery_api.domain.dto.pedido.PedidoResunDto;
 
 @Component
 public class PedidoDtoAssembler {
@@ -23,6 +24,16 @@ public class PedidoDtoAssembler {
     public List<PedidoDto> toCollectionModel(List<Pedido> entityS) {
         return entityS.stream()
                 .map(pedido -> toModel(pedido))
+                .collect(Collectors.toList());
+    }
+
+    public PedidoResunDto toModelResun(Pedido entity) {
+        return modelMapper.map(entity, PedidoResunDto.class);
+    }
+
+    public List<PedidoResunDto> toCollectionModelResun(List<Pedido> entityS) {
+        return entityS.stream()
+                .map(pedido -> toModelResun(pedido))
                 .collect(Collectors.toList());
     }
 

@@ -10,9 +10,4 @@ public class FormaPagamentoIdInputDto {
 
     @NotBlank
     private Long id;
-
-    @NotBlank
-    private String descricao;
-    
-    private Boolean ativo;
 }

@@ -112,6 +112,16 @@ public class RestauranteService {
         entityAtual.desativar();
     }
 
+    @Transactional
+    public void ativar(List<Long> ids){
+        ids.forEach(this::ativar);
+    }
+
+    @Transactional
+    public void desativar(List<Long> ids){
+        ids.forEach(this::desativar);
+    }
+
     // ===============================
 
     @Transactional

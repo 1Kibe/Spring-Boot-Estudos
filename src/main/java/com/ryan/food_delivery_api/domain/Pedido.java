@@ -12,9 +12,11 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
@@ -35,6 +37,10 @@ public class Pedido {
     @Column(nullable = false)
     private BigDecimal valorTotal;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_cliente_id",nullable = false)
+    private Usuario cliente;
+
     @Column(nullable = false)
     @CreationTimestamp
     private OffsetDateTime dataCriacao;
@@ -49,9 +55,9 @@ public class Pedido {
     private Endereco endereco;
     
     @Enumerated(EnumType.STRING)
-    private StatusPedido statusPedido;
+    private StatusPedido statusPedido = StatusPedido.CRIADO;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
     private List<FormaPagamento> formaPagamentos = new ArrayList<>();
 
     @OneToMany(mappedBy = "pedido")
@@ -59,6 +65,25 @@ public class Pedido {
 
     @ManyToOne
     private Restaurante restaurante;
+
+    // ===
+    public void calcularValorTotal(){
+        this.subTotal = getItensPedidos().stream()
+        .map(itensPedidos -> itensPedidos.getPrecoTotal())
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.valorTotal = this.subTotal.add(this.taxaFrete);
+    }
+
+    public void definirFrete(){
+        setTaxaFrete(getRestaurante().getTaxaFrete());
+    }
+
+    public void atribuirPedidos(){
+        getItensPedidos().forEach(itensPedidos -> itensPedidos.setPedido(this));
+    }
+
+    // ===
 
 
 }

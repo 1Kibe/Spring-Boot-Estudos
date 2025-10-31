@@ -25,6 +25,7 @@ import com.ryan.food_delivery_api.domain.dto.usuario.UsuarioDto;
 import com.ryan.food_delivery_api.exception.NegocioException;
 import com.ryan.food_delivery_api.exception.cidade.CidadeNaoEncontradaException;
 import com.ryan.food_delivery_api.exception.cozinha.CozinhaNaoEncontradaException;
+import com.ryan.food_delivery_api.exception.restaurante.RestauranteNaoEncontradoException;
 import com.ryan.food_delivery_api.service.RestauranteService;
 import com.ryan.food_delivery_api.service.UsuarioService;
 
@@ -117,6 +118,26 @@ public class RestauranteResource {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void desativar(@PathVariable Long id) {
         service.desativar(id);
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativacaoMultipla(@RequestBody List<Long> ids) {
+        try{
+            service.ativar(ids);
+        }catch(RestauranteNaoEncontradoException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
+    } // [0, 0, 0]
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void desativacaoMultipla(@RequestBody List<Long> ids) {
+        try{
+            service.desativar(ids);
+        }catch(RestauranteNaoEncontradoException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
     }
 
     // ============================================
