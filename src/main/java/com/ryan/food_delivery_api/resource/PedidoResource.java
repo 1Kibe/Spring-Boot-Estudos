@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 @RestController
 @RequestMapping("/pedidos")
 public class PedidoResource {
@@ -62,6 +61,5 @@ public class PedidoResource {
         Response responseBody = new Response();
         responseBody.setMessage("Status do pedido alterado com sucesso!");
     }
-
 
 }
