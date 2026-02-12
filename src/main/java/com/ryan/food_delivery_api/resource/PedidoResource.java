@@ -53,7 +53,7 @@ public class PedidoResource {
             throw new NegocioException(e.getMessage());
         }
     }
-
+ 
     @PutMapping("/alterarstatus/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void alterarPedido(@PathVariable Long id) {
