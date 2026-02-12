@@ -13,7 +13,7 @@ import lombok.Data;
 @Entity
 public class Produto {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
@@ -26,4 +26,17 @@ public class Produto {
 
     @ManyToOne
     private ItemPedido itemPedido;
+
+
+    public BigDecimal calularPrecoTotal(BigDecimal preco, Integer quantidade) {
+        if (preco != null) {
+            if (quantidade == null) {
+                quantidade = 0;
+            }
+            preco = preco.multiply(BigDecimal.valueOf(quantidade));
+            return preco;
+        }
+
+        return new BigDecimal(0);
+    }
 }

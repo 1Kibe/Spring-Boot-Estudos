@@ -1,19 +1,26 @@
 package com.ryan.food_delivery_api.service;
 
+import com.ryan.food_delivery_api.domain.*;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.pedido.PedidoDtoAssembler;
+import com.ryan.food_delivery_api.domain.dto.assemblersDisassemblers.pedido.PedidoDtoDisassembler;
+import com.ryan.food_delivery_api.domain.dto.itemPedido.ItemPedidoInputDto;
+import com.ryan.food_delivery_api.domain.dto.pedido.PedidoDto;
+import com.ryan.food_delivery_api.domain.dto.pedido.PedidoInputDto;
+import com.ryan.food_delivery_api.repository.FormaPagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ryan.food_delivery_api.domain.Cidade;
-import com.ryan.food_delivery_api.domain.FormaPagamento;
-import com.ryan.food_delivery_api.domain.Pedido;
-import com.ryan.food_delivery_api.domain.Produto;
-import com.ryan.food_delivery_api.domain.Restaurante;
-import com.ryan.food_delivery_api.domain.Usuario;
 import com.ryan.food_delivery_api.exception.NegocioException;
 import com.ryan.food_delivery_api.exception.pedido.PedidoNaoEncontradoException;
 import com.ryan.food_delivery_api.repository.PedidoRepository;
 
 import jakarta.transaction.Transactional;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PedidoService {
@@ -38,6 +45,12 @@ public class PedidoService {
     @Autowired
     private ProdutoService produtoService;
 
+    @Autowired
+    private PedidoDtoAssembler assembler;
+
+    @Autowired
+    private PedidoDtoDisassembler disassembler;
+
     // ===
 
     @Transactional
@@ -51,46 +64,52 @@ public class PedidoService {
         return produtoService.buscarOuFalhar(restauranteId, produtoId);
     }
 
+
     @Transactional
-    public Pedido emitir(Pedido pedido) {
-        validarPedido(pedido);
-        validarItens(pedido);
+    public void insert(PedidoInputDto input) {
+        Pedido pedido = new Pedido();
+        List<ItemPedido> itensPedido = new ArrayList<>();
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(input.getFormaPagamento().getId());
+        Restaurante restaurante = restauranteService.buscarOuFalhar(input.getRestaurante().getId());
+        Cidade cidade = cidadeService.buscarOuFalhar(input.getEndereco().getCidade().getId());
+        BigDecimal sub = new BigDecimal(0);
+        Endereco endereco = new Endereco();
+        endereco.setCep(input.getEndereco().getCep());
+        endereco.setLogradouro(input.getEndereco().getLogradouro());
+        endereco.setNumero(input.getEndereco().getNumero());
+        endereco.setComplemento(input.getEndereco().getComplemento());
+        endereco.setBairro(input.getEndereco().getBairro());
+        endereco.setCidade(cidade);
 
-        pedido.setTaxaFrete(pedido.getRestaurante().getTaxaFrete());
-        pedido.calcularValorTotal();
-
-        return repository.save(pedido);
-    }
-
-    private void validarPedido(Pedido pedido) {
-        Cidade cidade = cidadeService.buscarOuFalhar(pedido.getEndereco().getCidade().getId());
-        Usuario cliente = usuarioService.buscarOuFalhar(pedido.getCliente().getId());
-        Restaurante restaurante = restauranteService.buscarOuFalhar(pedido.getRestaurante().getId());
-        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(pedido.getFormaPagamento().getId());
-
-        pedido.getEndereco().setCidade(cidade);
-        pedido.setCliente(cliente);
-        pedido.setRestaurante(restaurante);
         pedido.setFormaPagamento(formaPagamento);
+        pedido.setRestaurante(restaurante);
+        pedido.setEndereco(endereco);
 
-        if (restaurante.naoAceitarFormaPagamento(formaPagamento)) {
-            throw new NegocioException(String.format("Forma de pagamento '%s' não é aceita por esse restaurante.",
-                    formaPagamento.getDescricao()));
+        //temp
+        pedido.setCliente(new Usuario());
+        pedido.getCliente().setId(1L);
+
+        pedido.setTaxaFrete(restaurante.getTaxaFrete());
+        pedido.setDataCriacao(OffsetDateTime.now());
+
+        for (ItemPedidoInputDto item : input.getItensPedido()) {
+            ItemPedido itemPedido = new ItemPedido();
+            Produto produto = produtoService.buscarOuFalhar(input.getRestaurante().getId(), item.getProdutoId());
+            itemPedido.setProduto(produto);
+            itemPedido.setPedido(pedido);
+            itemPedido.setQuantidade(item.getQuantidade());
+            itemPedido.setPrecoUnitario(produto.getPreco());
+            itemPedido.setObservacao(item.getObservacao());
+            itemPedido.setPrecoTotal(produto.calularPrecoTotal(itemPedido.getPrecoUnitario(), item.getQuantidade()));
+            sub = sub.add(itemPedido.getPrecoTotal());
+            itensPedido.add(itemPedido);
         }
+
+        pedido.setItensPedidos(itensPedido);
+        pedido.setSubTotal(sub);
+        pedido.setValorTotal(sub.add(restaurante.getTaxaFrete()));
+        repository.save(pedido);
     }
-
-
-    private void validarItens(Pedido pedido) {
-        pedido.getItensPedidos().forEach(item -> {
-            Produto produto = produtoService.buscarOuFalhar(
-                    pedido.getRestaurante().getId(), item.getProduto().getId());
-
-            item.setPedido(pedido);
-            item.setProduto(produto);
-            item.setPrecoUnitario(produto.getPreco());
-        });
-    }
-
     // Sub Rotas
 
     // @Transactional
