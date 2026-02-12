@@ -1,5 +1,6 @@
 package com.ryan.food_delivery_api.resource;
 
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,8 +53,14 @@ public class PedidoResource {
         } catch (EntidadeEmUsoException e) {
             throw new NegocioException(e.getMessage());
         }
+    }
 
-
+    @PutMapping("/alterarstatus/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void alterarPedido(@PathVariable Long id) {
+        service.alterarStatus(id);
+        Response responseBody = new Response();
+        responseBody.setMessage("Status do pedido alterado com sucesso!");
     }
 
 

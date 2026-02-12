@@ -64,6 +64,31 @@ public class PedidoService {
         return produtoService.buscarOuFalhar(restauranteId, produtoId);
     }
 
+    public void alterarStatus(Long id) {
+        Pedido pedido = buscarOuFalhar(id);
+        if (pedido.getStatusPedido() == StatusPedido.CRIADO) {
+            pedido.setStatusPedido(StatusPedido.CONFIRMADO);
+            pedido.setDataConfirmacao(OffsetDateTime.now());
+            
+        } else if (pedido.getStatusPedido() == StatusPedido.CONFIRMADO) {
+            pedido.setStatusPedido(StatusPedido.ENTREGUE);
+            pedido.setDataEntrega(OffsetDateTime.now());
+        } else {
+            throw new NegocioException("Não é possível alterar o status do pedido.");
+        }
+        repository.save(pedido);
+    }
+
+    public void cancelarPedido(Long id) {
+        Pedido pedido = buscarOuFalhar(id);
+        if (pedido.getStatusPedido() == StatusPedido.CRIADO) {
+            pedido.setStatusPedido(StatusPedido.CANCELADO);
+            pedido.setDataCancelamento(OffsetDateTime.now());
+            repository.save(pedido);
+        } else {
+            throw new NegocioException("Não é possível cancelar o pedido.");
+        }
+    }
 
     @Transactional
     public void insert(PedidoInputDto input) {
@@ -73,6 +98,7 @@ public class PedidoService {
         Restaurante restaurante = restauranteService.buscarOuFalhar(input.getRestaurante().getId());
         Cidade cidade = cidadeService.buscarOuFalhar(input.getEndereco().getCidade().getId());
         BigDecimal sub = new BigDecimal(0);
+        
         Endereco endereco = new Endereco();
         endereco.setCep(input.getEndereco().getCep());
         endereco.setLogradouro(input.getEndereco().getLogradouro());
@@ -84,6 +110,7 @@ public class PedidoService {
         pedido.setFormaPagamento(formaPagamento);
         pedido.setRestaurante(restaurante);
         pedido.setEndereco(endereco);
+        pedido.setStatusPedido(StatusPedido.CRIADO);
 
         //temp
         pedido.setCliente(new Usuario());
