@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import com.ryan.food_delivery_api.domain.Pedido;
 
 
-public interface PedidoRepository  extends JpaRepository<Pedido, Long>{
+public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @SuppressWarnings("null")
     @Query("from Pedido p join fetch p.cliente join fetch p.restaurante r join fetch r.cozinha ")
-    List<Pedido> findAll(); 
+    List<Pedido> findAll();
 }
+
+

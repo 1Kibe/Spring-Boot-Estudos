@@ -56,7 +56,7 @@ public class ProdutosResource {
     public List<ProdutoDto> listar(@PathVariable Long idR) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(idR);
 
-        List<Produto> todosProdutos = repository.findByRestaurante(restaurante);
+        List<Produto> todosProdutos = repository.findAtivosByRestaurante(restaurante);
 
         return assembler.toCollectionModel(todosProdutos);
 

@@ -3,6 +3,7 @@ package com.ryan.food_delivery_api.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.ryan.food_delivery_api.domain.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +22,8 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     Optional<Produto> findById(@Param("restaurante") Long id, @Param("produto") Long atributoid);
 
     List<Produto> findByRestaurante(Restaurante restaurante);
+
+    @Query("from Produto p where p.ativo = true and p.restaurante.id = :restaurante")
+    List<Produto> findAtivosByRestaurante(Restaurante restaurante);
 }
+
