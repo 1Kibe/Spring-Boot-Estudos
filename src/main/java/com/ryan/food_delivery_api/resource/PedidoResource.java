@@ -1,7 +1,10 @@
 package com.ryan.food_delivery_api.resource;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import com.ryan.food_delivery_api.domain.Pedido;
@@ -31,12 +34,29 @@ public class PedidoResource {
     @Autowired
     private PedidoDtoAssembler assembler;
 
+
     @GetMapping
     public List<PedidoResunDto> listar() {
         List<Pedido> todosPedidos = repository.findAll();
 
         return assembler.toCollectionModelResun(todosPedidos);
     }
+    
+//    @GetMapping
+//    public MappingJacksonValue listar() {
+//        List<Pedido> todosPedidos = repository.findAll();
+//        List<PedidoResunDto> dto =  assembler.toCollectionModelResun(todosPedidos);
+//
+//        //envelopamento
+//        MappingJacksonValue mapping = new MappingJacksonValue(dto);
+//
+//        SimpleFilterProvider provider = new SimpleFilterProvider();
+//        provider.addFilter("peidoFilter", SimpleBeanPropertyFilter.serializeAll());
+//
+//        mapping.setFilters(provider);
+//        return mapping;
+//
+//    }
 
     @GetMapping("/{id}")
     public PedidoDto buscar(@PathVariable Long id) {
@@ -53,7 +73,7 @@ public class PedidoResource {
             throw new NegocioException(e.getMessage());
         }
     }
- 
+
     @PutMapping("/alterarstatus/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void alterarPedido(@PathVariable Long id) {
