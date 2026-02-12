@@ -13,6 +13,7 @@ public class EnderecoDto {
 
     @JsonView(RestauranteView.Resumo.class)
     private String cep;
+
     @JsonView(RestauranteView.Resumo.class)
     private String logradouro;
     @JsonView(RestauranteView.Resumo.class)
