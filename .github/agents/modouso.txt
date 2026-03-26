@@ -1,0 +1,6 @@
+Como usar em qualquer projeto
+Copie a pasta .github (com agents/ e skills/) para o novo projeto. Depois:
+
+DocSetup → "P1" (uma vez por máquina) → "P2" (para cada repositório)
+DocAgent → "bootstrap" (uma vez por repo) → "documentar projeto" a cada mudança
+Ao final de cada batch, o Copilot pergunta "Quer subir commit do cofre do Obsidian?" — se sim, faz git add + commit + pull + push no rootPath.

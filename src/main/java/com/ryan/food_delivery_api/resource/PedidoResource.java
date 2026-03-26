@@ -2,6 +2,8 @@ package com.ryan.food_delivery_api.resource;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.ryan.food_delivery_api.repository.filter.PedidoRepositoryFilter;
+import com.ryan.food_delivery_api.repository.impl.PedidoRepositoryImpl;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -36,10 +38,11 @@ public class PedidoResource {
 
 
     @GetMapping
-    public List<PedidoResunDto> listar() {
+    public List<PedidoResunDto> listar(PedidoRepositoryFilter filter) {
         List<Pedido> todosPedidos = repository.findAll();
+        List<Pedido> filtro = repository.filtar(filter);
 
-        return assembler.toCollectionModelResun(todosPedidos);
+        return assembler.toCollectionModelResun(filtro);
     }
     
 //    @GetMapping

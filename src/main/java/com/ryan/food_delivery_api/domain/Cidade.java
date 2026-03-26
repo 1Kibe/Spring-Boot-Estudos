@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Cidade {
+public class Cidade {//teste
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

@@ -9,7 +9,7 @@ public class CidadeEmUsoException extends EntidadeEmUsoException {
     }
 
     public CidadeEmUsoException(String mensagem, Throwable causa) {
-        super(mensagem, causa);
+        super(mensagem, causa); 
     }
 
     public CidadeEmUsoException(Long id, Class<?> clazz) {

@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### obsidian — arquivos temporários e locais (não versionar)
+obsidian/context/
+obsidian/scripts/doc-cache.json
+obsidian/scripts/diff.json
